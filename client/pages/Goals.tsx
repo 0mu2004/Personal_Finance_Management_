@@ -1,25 +1,29 @@
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { goalsAPI, Goal } from '@/api/goals';
-import { Navbar } from '@/components/Navbar';
-import { Card, CardHeader, CardBody } from '@/components/Card';
-import { Button } from '@/components/Button';
-import { Modal } from '@/components/Modal';
-import { FormInput } from '@/components/FormInput';
-import { Plus, Trash2, Edit2 } from 'lucide-react';
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { goalsAPI, Goal } from "@/api/goals";
+import { Navbar } from "@/components/Navbar";
+import { Card, CardHeader, CardBody } from "@/components/Card";
+import { Button } from "@/components/Button";
+import { Modal } from "@/components/Modal";
+import { FormInput } from "@/components/FormInput";
+import { Plus, Trash2, Edit2 } from "lucide-react";
 
 export default function Goals() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
-    name: '',
-    target_amount: '',
-    current_amount: '',
-    deadline: '',
+    name: "",
+    target_amount: "",
+    current_amount: "",
+    deadline: "",
   });
 
-  const { data: goals = [], refetch, isLoading } = useQuery({
-    queryKey: ['goals'],
+  const {
+    data: goals = [],
+    refetch,
+    isLoading,
+  } = useQuery({
+    queryKey: ["goals"],
     queryFn: () => goalsAPI.getGoals().then((res) => res.data),
   });
 
@@ -30,15 +34,15 @@ export default function Goals() {
         name: goal.name,
         target_amount: goal.target_amount.toString(),
         current_amount: goal.current_amount.toString(),
-        deadline: goal.deadline.split('T')[0],
+        deadline: goal.deadline.split("T")[0],
       });
     } else {
       setEditingId(null);
       setFormData({
-        name: '',
-        target_amount: '',
-        current_amount: '',
-        deadline: '',
+        name: "",
+        target_amount: "",
+        current_amount: "",
+        deadline: "",
       });
     }
     setIsModalOpen(true);
@@ -66,17 +70,17 @@ export default function Goals() {
       setIsModalOpen(false);
       refetch();
     } catch (error) {
-      console.error('Error saving goal:', error);
+      console.error("Error saving goal:", error);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this goal?')) {
+    if (window.confirm("Are you sure you want to delete this goal?")) {
       try {
         await goalsAPI.deleteGoal(id);
         refetch();
       } catch (error) {
-        console.error('Error deleting goal:', error);
+        console.error("Error deleting goal:", error);
       }
     }
   };
@@ -116,7 +120,9 @@ export default function Goals() {
           ) : goals.length === 0 ? (
             <Card>
               <CardBody className="text-center py-12">
-                <p className="text-muted-foreground mb-4">No goals created yet</p>
+                <p className="text-muted-foreground mb-4">
+                  No goals created yet
+                </p>
                 <Button onClick={() => handleOpenModal()}>
                   Create your first goal
                 </Button>
@@ -125,7 +131,8 @@ export default function Goals() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {goals.map((goal) => {
-                const percentage = (goal.current_amount / goal.target_amount) * 100;
+                const percentage =
+                  (goal.current_amount / goal.target_amount) * 100;
                 const days = daysUntilDeadline(goal.deadline);
                 const isCompleted = goal.current_amount >= goal.target_amount;
                 const isOverdue = days < 0;
@@ -155,15 +162,18 @@ export default function Goals() {
                       {/* Progress Bar */}
                       <div>
                         <div className="flex justify-between mb-2">
-                          <span className="text-sm text-muted-foreground">Progress</span>
+                          <span className="text-sm text-muted-foreground">
+                            Progress
+                          </span>
                           <span className="text-sm font-medium text-foreground">
-                            ${goal.current_amount.toFixed(2)} / ${goal.target_amount.toFixed(2)}
+                            ${goal.current_amount.toFixed(2)} / $
+                            {goal.target_amount.toFixed(2)}
                           </span>
                         </div>
                         <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
                           <div
                             className={`h-full transition-all ${
-                              isCompleted ? 'bg-success' : 'bg-primary'
+                              isCompleted ? "bg-success" : "bg-primary"
                             }`}
                             style={{ width: `${Math.min(percentage, 100)}%` }}
                           />
@@ -193,13 +203,21 @@ export default function Goals() {
 
                       <div className="grid grid-cols-2 gap-4 pt-2 border-t border-border">
                         <div>
-                          <p className="text-xs text-muted-foreground">Remaining</p>
+                          <p className="text-xs text-muted-foreground">
+                            Remaining
+                          </p>
                           <p className="text-lg font-bold text-primary">
-                            ${Math.max(0, goal.target_amount - goal.current_amount).toFixed(2)}
+                            $
+                            {Math.max(
+                              0,
+                              goal.target_amount - goal.current_amount,
+                            ).toFixed(2)}
                           </p>
                         </div>
                         <div>
-                          <p className="text-xs text-muted-foreground">Progress</p>
+                          <p className="text-xs text-muted-foreground">
+                            Progress
+                          </p>
                           <p className="text-lg font-bold text-foreground">
                             {Math.min(percentage, 100).toFixed(0)}%
                           </p>
@@ -222,18 +240,15 @@ export default function Goals() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingId ? 'Edit Goal' : 'Add Goal'}
+        title={editingId ? "Edit Goal" : "Add Goal"}
         size="md"
         footer={
           <>
-            <Button
-              variant="outline"
-              onClick={() => setIsModalOpen(false)}
-            >
+            <Button variant="outline" onClick={() => setIsModalOpen(false)}>
               Cancel
             </Button>
             <Button onClick={handleSubmit}>
-              {editingId ? 'Update' : 'Add'} Goal
+              {editingId ? "Update" : "Add"} Goal
             </Button>
           </>
         }
@@ -255,7 +270,9 @@ export default function Goals() {
             min="0"
             placeholder="0.00"
             value={formData.target_amount}
-            onChange={(e) => setFormData({ ...formData, target_amount: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, target_amount: e.target.value })
+            }
             required
           />
 
@@ -266,7 +283,9 @@ export default function Goals() {
             min="0"
             placeholder="0.00"
             value={formData.current_amount}
-            onChange={(e) => setFormData({ ...formData, current_amount: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, current_amount: e.target.value })
+            }
             required
           />
 
@@ -274,7 +293,9 @@ export default function Goals() {
             label="Deadline"
             type="date"
             value={formData.deadline}
-            onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, deadline: e.target.value })
+            }
             required
           />
         </form>

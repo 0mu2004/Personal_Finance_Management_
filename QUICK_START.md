@@ -5,16 +5,19 @@ Get started in 5 minutes! No backend, no database, no complex setup.
 ## Installation
 
 ### 1. Install dependencies
+
 ```bash
 pnpm install
 ```
 
 ### 2. Start the development server
+
 ```bash
 pnpm dev
 ```
 
 ### 3. Open in browser
+
 The app will automatically open at `http://localhost:5173`
 
 **That's it! You're ready to go.** 🎉
@@ -22,11 +25,13 @@ The app will automatically open at `http://localhost:5173`
 ## First Steps
 
 ### Create an Account
-1. Click "Register" 
+
+1. Click "Register"
 2. Enter your name, email, password
 3. Click "Register"
 
 ### Add Your First Transaction
+
 1. Click "Transactions" in the top menu
 2. Click "Add Transaction"
 3. Fill in:
@@ -38,6 +43,7 @@ The app will automatically open at `http://localhost:5173`
 4. Click "Add Transaction"
 
 ### Create a Budget
+
 1. Click "Budget"
 2. Click "Add Budget"
 3. Fill in:
@@ -47,6 +53,7 @@ The app will automatically open at `http://localhost:5173`
 4. Click "Create Budget"
 
 ### Set a Goal
+
 1. Click "Goals"
 2. Click "Add Goal"
 3. Fill in:
@@ -57,6 +64,7 @@ The app will automatically open at `http://localhost:5173`
 4. Click "Add Goal"
 
 ### View Your Dashboard
+
 1. Click "Dashboard"
 2. See your financial overview
 3. Charts populate with your data
@@ -64,23 +72,27 @@ The app will automatically open at `http://localhost:5173`
 ## Important to Know
 
 ### Where is My Data?
+
 - **All stored in your browser** using localStorage
 - No backend server
 - No account sync
 - No cloud storage
 
 ### Backup Your Data
+
 Your data is safe in your browser, but if you want to backup:
 
 1. **In browser console (F12):**
+
    ```javascript
    // Copy all data:
-   JSON.stringify(localStorage)
+   JSON.stringify(localStorage);
    ```
 
 2. **Save to a text file** for safekeeping
 
 ### Clearing Data
+
 - **Clearing browser cache** = Lost data
 - **Switching browsers** = No data
 - **Private/Incognito mode** = Data lost after closing
@@ -88,6 +100,7 @@ Your data is safe in your browser, but if you want to backup:
 ## Troubleshooting
 
 ### "App not loading"
+
 ```bash
 # Clear npm cache and reinstall
 rm -rf node_modules pnpm-lock.yaml
@@ -96,18 +109,21 @@ pnpm dev
 ```
 
 ### "Port 5173 already in use"
+
 ```bash
 # Run on different port
 pnpm dev -- --port 3000
 ```
 
 ### "Data disappeared"
+
 1. Check if you're in private/incognito mode
 2. Check browser settings for localStorage
 3. Try different browser
 4. Restore browser data if recently cleared
 
 ### Charts not showing
+
 1. Add more transactions
 2. Refresh browser (F5)
 3. Check browser console (F12) for errors
@@ -115,6 +131,7 @@ pnpm dev -- --port 3000
 ## Building for Production
 
 ### Build
+
 ```bash
 pnpm build
 ```
@@ -122,6 +139,7 @@ pnpm build
 Creates `dist/` folder ready to deploy.
 
 ### Deploy to Netlify (Easiest)
+
 1. Go to [netlify.com](https://netlify.com)
 2. Sign up free
 3. Click "Add new site"
@@ -129,6 +147,7 @@ Creates `dist/` folder ready to deploy.
 5. Done! Your app is live
 
 ### Deploy to Vercel
+
 1. Go to [vercel.com](https://vercel.com)
 2. Click "New Project"
 3. Select your GitHub repo
@@ -136,12 +155,13 @@ Creates `dist/` folder ready to deploy.
 5. Done!
 
 ### Deploy to GitHub Pages
+
 1. Update `vite.config.ts`:
    ```typescript
    export default {
-     base: '/fintrack/', // or your repo name
+     base: "/fintrack/", // or your repo name
      // ... rest of config
-   }
+   };
    ```
 2. Run `pnpm build`
 3. Upload `dist` folder to GitHub
@@ -149,24 +169,29 @@ Creates `dist/` folder ready to deploy.
 ## Common Tasks
 
 ### Change Colors
+
 Edit `client/global.css`:
+
 ```css
---primary: 210 100% 50%;      /* Blue */
---secondary: 160 100% 42%;    /* Green */
+--primary: 210 100% 50%; /* Blue */
+--secondary: 160 100% 42%; /* Green */
 --destructive: 0 84.2% 60.2%; /* Red */
 ```
 
 ### Add Categories
+
 Edit transaction/budget pages:
+
 ```typescript
 const CATEGORIES = [
-  { value: 'groceries', label: 'Groceries' },
-  { value: 'gas', label: 'Gas' },
+  { value: "groceries", label: "Groceries" },
+  { value: "gas", label: "Gas" },
   // Add your own...
 ];
 ```
 
 ### Customize Styling
+
 All styles use Tailwind CSS utility classes. Edit any component in `client/components/` and `client/pages/`.
 
 ## Files & Folders
@@ -190,11 +215,13 @@ client/
 ## Need Help?
 
 ### Check These First
+
 - Browser console: `F12` > Console tab
 - LocalStorage contents: `F12` > Application > LocalStorage
 - Network tab: `F12` > Network (to see API calls)
 
 ### Common Errors
+
 - **"localStorage not available"** - Enable in browser settings
 - **"Cannot read property of undefined"** - Refresh browser
 - **"Charts not rendering"** - Add transactions to populate data

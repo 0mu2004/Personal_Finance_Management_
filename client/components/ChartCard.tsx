@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface ChartCardProps {
   title: string;
@@ -9,9 +9,11 @@ interface ChartCardProps {
 export const ChartCard: React.FC<ChartCardProps> = ({
   title,
   children,
-  className = '',
+  className = "",
 }) => (
-  <div className={`bg-card border border-border rounded-lg p-6 shadow-sm ${className}`}>
+  <div
+    className={`bg-card border border-border rounded-lg p-6 shadow-sm ${className}`}
+  >
     <h3 className="text-lg font-semibold text-foreground mb-4">{title}</h3>
     <div className="w-full overflow-x-auto">{children}</div>
   </div>

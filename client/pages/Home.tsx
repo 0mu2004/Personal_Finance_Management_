@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
-import { Navbar } from '@/components/Navbar';
-import { Button } from '@/components/Button';
+import { Link } from "react-router-dom";
+import { Navbar } from "@/components/Navbar";
+import { Button } from "@/components/Button";
 import {
   TrendingUp,
   Target,
@@ -8,7 +8,7 @@ import {
   Zap,
   Shield,
   Smartphone,
-} from 'lucide-react';
+} from "lucide-react";
 
 export default function Home() {
   return (
@@ -21,7 +21,7 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <h1 className="text-5xl lg:text-6xl font-bold text-foreground mb-6">
-                  Take Control of Your{' '}
+                  Take Control of Your{" "}
                   <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                     Finances
                   </span>
@@ -59,7 +59,9 @@ export default function Home() {
                     </div>
                     <div className="p-3 bg-red-50 rounded-lg">
                       <p className="text-xs text-muted-foreground">Expenses</p>
-                      <p className="text-lg font-bold text-destructive">$3,250</p>
+                      <p className="text-lg font-bold text-destructive">
+                        $3,250
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -120,7 +122,10 @@ export default function Home() {
               health with FinTrack.
             </p>
             <Link to="/register">
-              <Button size="lg" className="bg-white text-primary hover:bg-white/90">
+              <Button
+                size="lg"
+                className="bg-white text-primary hover:bg-white/90"
+              >
                 Create Free Account
               </Button>
             </Link>

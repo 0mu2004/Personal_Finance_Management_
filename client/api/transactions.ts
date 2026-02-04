@@ -1,9 +1,9 @@
-import axiosClient from './axiosClient';
+import axiosClient from "./axiosClient";
 
 export interface Transaction {
   id: string;
   user_id: string;
-  type: 'income' | 'expense';
+  type: "income" | "expense";
   amount: number;
   category: string;
   description: string;
@@ -12,7 +12,7 @@ export interface Transaction {
 }
 
 export interface CreateTransactionRequest {
-  type: 'income' | 'expense';
+  type: "income" | "expense";
   amount: number;
   category: string;
   description: string;
@@ -21,14 +21,13 @@ export interface CreateTransactionRequest {
 
 export const transactionsAPI = {
   getTransactions: (params?: { category?: string; date?: string }) =>
-    axiosClient.get<Transaction[]>('/transactions', { params }),
+    axiosClient.get<Transaction[]>("/transactions", { params }),
 
   createTransaction: (data: CreateTransactionRequest) =>
-    axiosClient.post<Transaction>('/transactions', data),
+    axiosClient.post<Transaction>("/transactions", data),
 
   updateTransaction: (id: string, data: Partial<CreateTransactionRequest>) =>
     axiosClient.put<Transaction>(`/transactions/${id}`, data),
 
-  deleteTransaction: (id: string) =>
-    axiosClient.delete(`/transactions/${id}`),
+  deleteTransaction: (id: string) => axiosClient.delete(`/transactions/${id}`),
 };

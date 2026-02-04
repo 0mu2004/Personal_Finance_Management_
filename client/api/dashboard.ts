@@ -1,4 +1,4 @@
-import axiosClient from './axiosClient';
+import axiosClient from "./axiosClient";
 
 export interface DashboardSummary {
   total_income: number;
@@ -14,6 +14,5 @@ export interface DashboardSummary {
 }
 
 export const dashboardAPI = {
-  getSummary: () =>
-    axiosClient.get<DashboardSummary>('/dashboard/summary'),
+  getSummary: () => axiosClient.get<DashboardSummary>("/dashboard/summary"),
 };

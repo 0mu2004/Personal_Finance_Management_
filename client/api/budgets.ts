@@ -1,4 +1,4 @@
-import axiosClient from './axiosClient';
+import axiosClient from "./axiosClient";
 
 export interface Budget {
   id: string;
@@ -17,15 +17,13 @@ export interface CreateBudgetRequest {
 }
 
 export const budgetsAPI = {
-  getBudgets: () =>
-    axiosClient.get<Budget[]>('/budgets'),
+  getBudgets: () => axiosClient.get<Budget[]>("/budgets"),
 
   createBudget: (data: CreateBudgetRequest) =>
-    axiosClient.post<Budget>('/budgets', data),
+    axiosClient.post<Budget>("/budgets", data),
 
   updateBudget: (id: string, data: Partial<CreateBudgetRequest>) =>
     axiosClient.put<Budget>(`/budgets/${id}`, data),
 
-  deleteBudget: (id: string) =>
-    axiosClient.delete(`/budgets/${id}`),
+  deleteBudget: (id: string) => axiosClient.delete(`/budgets/${id}`),
 };

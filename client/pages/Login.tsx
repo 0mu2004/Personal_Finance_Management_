@@ -1,32 +1,30 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '@/context/AuthContext';
-import { authAPI } from '@/api/auth';
-import { FormInput } from '@/components/FormInput';
-import { Button } from '@/components/Button';
-import { Navbar } from '@/components/Navbar';
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
+import { authAPI } from "@/api/auth";
+import { FormInput } from "@/components/FormInput";
+import { Button } from "@/components/Button";
+import { Navbar } from "@/components/Navbar";
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
+    setError("");
 
     try {
       const response = await authAPI.login({ email, password });
       login(response.data.user, response.data.access_token);
-      navigate('/dashboard');
+      navigate("/dashboard");
     } catch (err: any) {
-      setError(
-        err.response?.data?.detail || 'Login failed. Please try again.'
-      );
+      setError(err.response?.data?.detail || "Login failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -76,11 +74,7 @@ export default function Login() {
                 required
               />
 
-              <Button
-                type="submit"
-                isLoading={isLoading}
-                className="w-full"
-              >
+              <Button type="submit" isLoading={isLoading} className="w-full">
                 Login
               </Button>
             </form>
@@ -88,7 +82,7 @@ export default function Login() {
             {/* Footer */}
             <div className="mt-6 text-center">
               <p className="text-muted-foreground text-sm">
-                Don't have an account?{' '}
+                Don't have an account?{" "}
                 <Link
                   to="/register"
                   className="text-primary font-medium hover:underline"

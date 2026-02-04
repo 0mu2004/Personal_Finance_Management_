@@ -1,16 +1,35 @@
-import { useQuery } from '@tanstack/react-query';
-import { dashboardAPI } from '@/api/dashboard';
-import { Navbar } from '@/components/Navbar';
-import { StatCard } from '@/components/StatCard';
-import { ChartCard } from '@/components/ChartCard';
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { TrendingUp, TrendingDown, Target, DollarSign } from 'lucide-react';
+import { useQuery } from "@tanstack/react-query";
+import { dashboardAPI } from "@/api/dashboard";
+import { Navbar } from "@/components/Navbar";
+import { StatCard } from "@/components/StatCard";
+import { ChartCard } from "@/components/ChartCard";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+import { TrendingUp, TrendingDown, Target, DollarSign } from "lucide-react";
 
-const COLORS = ['#0084FF', '#00C99A', '#FFB81C', '#FF6B6B', '#6C5CE7', '#FD79A8'];
+const COLORS = [
+  "#0084FF",
+  "#00C99A",
+  "#FFB81C",
+  "#FF6B6B",
+  "#6C5CE7",
+  "#FD79A8",
+];
 
 export default function Dashboard() {
   const { data: summary, isLoading } = useQuery({
-    queryKey: ['dashboard-summary'],
+    queryKey: ["dashboard-summary"],
     queryFn: () => dashboardAPI.getSummary().then((res) => res.data),
   });
 
@@ -105,16 +124,23 @@ export default function Dashboard() {
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, value }) => `${name}: $${value.toFixed(0)}`}
+                      label={({ name, value }) =>
+                        `${name}: $${value.toFixed(0)}`
+                      }
                       outerRadius={80}
                       fill="#8884d8"
                       dataKey="value"
                     >
                       {categoryData.map((_, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
                       ))}
                     </Pie>
-                    <Tooltip formatter={(value) => `$${(value as number).toFixed(2)}`} />
+                    <Tooltip
+                      formatter={(value) => `$${(value as number).toFixed(2)}`}
+                    />
                   </PieChart>
                 </ResponsiveContainer>
               ) : (
@@ -132,7 +158,9 @@ export default function Dashboard() {
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                     <XAxis dataKey="month" />
                     <YAxis />
-                    <Tooltip formatter={(value) => `$${(value as number).toFixed(2)}`} />
+                    <Tooltip
+                      formatter={(value) => `$${(value as number).toFixed(2)}`}
+                    />
                     <Legend />
                     <Bar dataKey="amount" fill="#0084FF" name="Spending" />
                   </BarChart>

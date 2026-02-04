@@ -1,7 +1,7 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '@/context/AuthContext';
-import { LogOut, Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
+import { LogOut, Menu, X } from "lucide-react";
+import { useState } from "react";
 
 export const Navbar = () => {
   const { isAuthenticated, user, logout } = useAuth();
@@ -10,7 +10,7 @@ export const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate("/");
   };
 
   if (!isAuthenticated) {

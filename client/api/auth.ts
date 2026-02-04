@@ -1,4 +1,4 @@
-import axiosClient from './axiosClient';
+import axiosClient from "./axiosClient";
 
 export interface LoginRequest {
   email: string;
@@ -22,8 +22,8 @@ export interface AuthResponse {
 
 export const authAPI = {
   login: (data: LoginRequest) =>
-    axiosClient.post<AuthResponse>('/auth/login', data),
+    axiosClient.post<AuthResponse>("/auth/login", data),
 
   register: (data: RegisterRequest) =>
-    axiosClient.post<AuthResponse>('/auth/register', data),
+    axiosClient.post<AuthResponse>("/auth/register", data),
 };

@@ -1,27 +1,27 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '@/context/AuthContext';
-import { authAPI } from '@/api/auth';
-import { FormInput } from '@/components/FormInput';
-import { Button } from '@/components/Button';
-import { Navbar } from '@/components/Navbar';
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
+import { authAPI } from "@/api/auth";
+import { FormInput } from "@/components/FormInput";
+import { Button } from "@/components/Button";
+import { Navbar } from "@/components/Navbar";
 
 export default function Register() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       return;
     }
 
@@ -34,10 +34,10 @@ export default function Register() {
         password,
       });
       login(response.data.user, response.data.access_token);
-      navigate('/dashboard');
+      navigate("/dashboard");
     } catch (err: any) {
       setError(
-        err.response?.data?.detail || 'Registration failed. Please try again.'
+        err.response?.data?.detail || "Registration failed. Please try again.",
       );
     } finally {
       setIsLoading(false);
@@ -56,9 +56,7 @@ export default function Register() {
                 <span className="text-white font-bold text-2xl">F</span>
               </div>
               <h1 className="text-3xl font-bold text-foreground">FinTrack</h1>
-              <p className="text-muted-foreground mt-2">
-                Create your account
-              </p>
+              <p className="text-muted-foreground mt-2">Create your account</p>
             </div>
 
             {/* Error Message */}
@@ -106,11 +104,7 @@ export default function Register() {
                 required
               />
 
-              <Button
-                type="submit"
-                isLoading={isLoading}
-                className="w-full"
-              >
+              <Button type="submit" isLoading={isLoading} className="w-full">
                 Register
               </Button>
             </form>
@@ -118,7 +112,7 @@ export default function Register() {
             {/* Footer */}
             <div className="mt-6 text-center">
               <p className="text-muted-foreground text-sm">
-                Already have an account?{' '}
+                Already have an account?{" "}
                 <Link
                   to="/login"
                   className="text-primary font-medium hover:underline"

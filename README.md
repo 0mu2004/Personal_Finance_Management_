@@ -5,11 +5,13 @@ A modern, production-ready personal finance tracker web application built with R
 ## Features
 
 ### Authentication
+
 - User registration and login
 - Secure password storage in localStorage
 - Session persistence
 
 ### Dashboard
+
 - Real-time financial overview
 - Total income, expenses, and savings visualization
 - Category-wise spending breakdown (Pie Chart)
@@ -17,12 +19,14 @@ A modern, production-ready personal finance tracker web application built with R
 - Savings rate calculation
 
 ### Transactions
+
 - Add, edit, and delete transactions
 - Categorize as income or expense
 - Filter by category and date
 - Detailed transaction history
 
 ### Budget Management
+
 - Create category-based budgets
 - Track spending vs budget limits
 - Visual progress bars
@@ -30,12 +34,14 @@ A modern, production-ready personal finance tracker web application built with R
 - Remaining budget calculations
 
 ### Savings Goals
+
 - Create and track savings goals
 - Monitor progress toward targets
 - Deadline tracking
 - Goal completion status
 
 ### Responsive Design
+
 - Mobile-first approach
 - Works on all devices
 - Beautiful fintech UI
@@ -43,6 +49,7 @@ A modern, production-ready personal finance tracker web application built with R
 ## Tech Stack
 
 ### Frontend
+
 - **React 18** - UI library
 - **TypeScript** - Type safety
 - **Vite** - Build tool
@@ -53,6 +60,7 @@ A modern, production-ready personal finance tracker web application built with R
 - **Lucide React** - Icons
 
 ### Storage
+
 - **Browser LocalStorage** - Data persistence (no backend needed!)
 
 ## Project Structure
@@ -99,6 +107,7 @@ fintrack/
 ## Setup & Installation
 
 ### Prerequisites
+
 - Node.js 18+ and pnpm
 - 5 minutes
 
@@ -107,14 +116,17 @@ That's it! No backend, no database, no complex setup required.
 ### Installation
 
 1. **Install dependencies:**
+
    ```bash
    pnpm install
    ```
 
 2. **Start development server:**
+
    ```bash
    pnpm dev
    ```
+
    Frontend runs on `http://localhost:5173`
 
 3. **Open in browser:**
@@ -171,6 +183,7 @@ That's it! No backend, no database, no complex setup required.
 **All data is stored in your browser's LocalStorage.** This means:
 
 ✅ **Pros:**
+
 - No backend server needed
 - No internet required (after initial load)
 - Data stays on your computer
@@ -178,6 +191,7 @@ That's it! No backend, no database, no complex setup required.
 - Free hosting
 
 ⚠️ **Important:**
+
 - Data is specific to each browser/device
 - Clearing browser data will delete everything
 - Not synced across devices
@@ -189,15 +203,16 @@ Your data is stored as JSON in localStorage. You can export it:
 
 ```javascript
 // In browser console (F12):
-localStorage.getItem('transactions')
-localStorage.getItem('budgets')
-localStorage.getItem('goals')
-localStorage.getItem('users')
+localStorage.getItem("transactions");
+localStorage.getItem("budgets");
+localStorage.getItem("goals");
+localStorage.getItem("users");
 ```
 
 ## Build for Production
 
 ### Build
+
 ```bash
 pnpm build
 ```
@@ -209,24 +224,28 @@ This creates a `dist` folder with your optimized app.
 You can deploy the `dist` folder to any static hosting:
 
 **Netlify**
+
 ```bash
 pnpm build
 # Drag and drop the 'dist' folder to Netlify
 ```
 
 **Vercel**
+
 ```bash
 pnpm build
 # Connect your repository to Vercel
 ```
 
 **GitHub Pages**
+
 ```bash
 pnpm build
 # Push dist folder to gh-pages branch
 ```
 
 **Any Web Server**
+
 ```bash
 pnpm build
 # Upload dist folder to your server
@@ -264,6 +283,7 @@ pnpm format.fix
 ## Security & Privacy
 
 Since everything runs in your browser:
+
 - Your data never leaves your computer
 - No server can access your financial information
 - Passwords are stored locally (not sent anywhere)
@@ -287,7 +307,7 @@ Edit `client/global.css`:
 
 ```css
 :root {
-  --primary: 210 100% 50%;  /* Change primary color */
+  --primary: 210 100% 50%; /* Change primary color */
   --secondary: 160 100% 42%; /* Change secondary color */
   --success: 160 100% 42%;
   --destructive: 0 84.2% 60.2%;
@@ -300,7 +320,7 @@ Edit transaction/budget pages and add to CATEGORIES array:
 
 ```typescript
 const CATEGORIES = [
-  { value: 'your-category', label: 'Your Category' },
+  { value: "your-category", label: "Your Category" },
   // ...
 ];
 ```
@@ -319,16 +339,19 @@ All components are in `client/components/` - feel free to customize styling and 
 ## Known Issues & Solutions
 
 ### Data Not Persisting
+
 - Ensure localStorage is enabled in your browser
 - Check if you're in private/incognito mode (data won't persist)
 - Try a different browser
 
 ### Charts Not Showing
+
 - Make sure you have transactions in that month/category
 - Refresh the page (F5)
 - Check browser console for errors (F12)
 
 ### Too Much Data
+
 - localStorage typically allows 5-10MB
 - If you hit the limit, the app will warn you
 - Delete old transactions or export data
@@ -347,6 +370,7 @@ All components are in `client/components/` - feel free to customize styling and 
 ## Contributing
 
 Contributions welcome! Feel free to:
+
 1. Fork the repository
 2. Create a feature branch
 3. Make improvements
@@ -359,6 +383,7 @@ MIT License - use freely for personal or commercial projects
 ## Support
 
 For issues or questions:
+
 1. Check browser console (F12) for error messages
 2. Try clearing browser cache and cookies
 3. Try a different browser
@@ -375,6 +400,7 @@ No backend. No servers. Just you and your data. Locally.
 ## Want to Extend with a Backend?
 
 If you want to add:
+
 - Cloud sync across devices
 - Collaborative features
 - Mobile apps

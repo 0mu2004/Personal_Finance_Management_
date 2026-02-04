@@ -1,9 +1,9 @@
-import { useAuth } from '@/context/AuthContext';
-import { Navbar } from '@/components/Navbar';
-import { Card, CardHeader, CardBody } from '@/components/Card';
-import { Button } from '@/components/Button';
-import { useQuery } from '@tanstack/react-query';
-import { dashboardAPI } from '@/api/dashboard';
+import { useAuth } from "@/context/AuthContext";
+import { Navbar } from "@/components/Navbar";
+import { Card, CardHeader, CardBody } from "@/components/Card";
+import { Button } from "@/components/Button";
+import { useQuery } from "@tanstack/react-query";
+import { dashboardAPI } from "@/api/dashboard";
 import {
   User,
   Mail,
@@ -13,12 +13,12 @@ import {
   Lightbulb,
   PiggyBank,
   Zap,
-} from 'lucide-react';
+} from "lucide-react";
 
 export default function Profile() {
   const { user, logout } = useAuth();
   const { data: summary } = useQuery({
-    queryKey: ['dashboard-summary'],
+    queryKey: ["dashboard-summary"],
     queryFn: () => dashboardAPI.getSummary().then((res) => res.data),
   });
 
@@ -35,24 +35,24 @@ export default function Profile() {
     if (savingsRate < 10) {
       tips.push({
         icon: <PiggyBank size={20} />,
-        title: 'Increase Your Savings Rate',
+        title: "Increase Your Savings Rate",
         description:
-          'Your current savings rate is low. Try to save at least 10-20% of your income each month. This is crucial for building wealth.',
-        color: 'warning',
+          "Your current savings rate is low. Try to save at least 10-20% of your income each month. This is crucial for building wealth.",
+        color: "warning",
       });
     } else if (savingsRate >= 20) {
       tips.push({
         icon: <TrendingUp size={20} />,
-        title: 'Great Savings Habit!',
+        title: "Great Savings Habit!",
         description: `You're saving ${savingsRate.toFixed(1)}% of your income. Keep up this excellent habit!`,
-        color: 'success',
+        color: "success",
       });
     }
 
     // Tip 2: Expense Categories
     if (summary.category_breakdown) {
       const categories = Object.entries(summary.category_breakdown).sort(
-        (a, b) => b[1] - a[1]
+        (a, b) => b[1] - a[1],
       );
 
       if (categories.length > 0) {
@@ -65,7 +65,7 @@ export default function Profile() {
             icon: <AlertCircle size={20} />,
             title: `High ${topCategory[0]} Spending`,
             description: `Your ${topCategory[0]} category accounts for ${topCategoryPercent.toFixed(1)}% of your expenses. Consider reducing this to boost savings.`,
-            color: 'destructive',
+            color: "destructive",
           });
         }
 
@@ -73,10 +73,10 @@ export default function Profile() {
         if (categories.length < 3) {
           tips.push({
             icon: <Zap size={20} />,
-            title: 'Diversify Your Spending',
+            title: "Diversify Your Spending",
             description:
-              'You have very few spending categories. Track more categories to identify more savings opportunities.',
-            color: 'primary',
+              "You have very few spending categories. Track more categories to identify more savings opportunities.",
+            color: "primary",
           });
         }
       }
@@ -84,13 +84,14 @@ export default function Profile() {
 
     // Tip 4: Income vs Expense Ratio
     if (summary.total_income > 0) {
-      const expenseRatio = (summary.total_expenses / summary.total_income) * 100;
+      const expenseRatio =
+        (summary.total_expenses / summary.total_income) * 100;
       if (expenseRatio > 80) {
         tips.push({
           icon: <Lightbulb size={20} />,
-          title: 'Budget Optimization Needed',
+          title: "Budget Optimization Needed",
           description: `You're spending ${expenseRatio.toFixed(1)}% of your income. Try to keep expenses below 80% to increase savings.`,
-          color: 'warning',
+          color: "warning",
         });
       }
     }
@@ -99,10 +100,10 @@ export default function Profile() {
     if (tips.length === 0) {
       tips.push({
         icon: <Target size={20} />,
-        title: 'Start Tracking Your Finances',
+        title: "Start Tracking Your Finances",
         description:
-          'Add more transactions to get personalized savings recommendations based on your spending patterns.',
-        color: 'primary',
+          "Add more transactions to get personalized savings recommendations based on your spending patterns.",
+        color: "primary",
       });
     }
 
@@ -136,7 +137,7 @@ export default function Profile() {
                   variant="outline"
                   onClick={() => {
                     logout();
-                    window.location.href = '/';
+                    window.location.href = "/";
                   }}
                   className="bg-white text-primary hover:bg-white/90 border-0"
                 >
@@ -242,9 +243,9 @@ export default function Profile() {
                           className="h-full bg-primary rounded-full transition-all"
                           style={{
                             width: `${Math.min(
-                              ((summary.savings / summary.total_income) * 100 ||
-                                0),
-                              100
+                              (summary.savings / summary.total_income) * 100 ||
+                                0,
+                              100,
                             )}%`,
                           }}
                         />
@@ -263,7 +264,8 @@ export default function Profile() {
                         <span className="text-sm font-bold text-destructive">
                           {summary.total_income > 0
                             ? (
-                                (summary.total_expenses / summary.total_income) *
+                                (summary.total_expenses /
+                                  summary.total_income) *
                                 100
                               ).toFixed(1)
                             : 0}
@@ -275,10 +277,9 @@ export default function Profile() {
                           className="h-full bg-destructive rounded-full transition-all"
                           style={{
                             width: `${Math.min(
-                              ((summary.total_expenses / summary.total_income) *
-                                100 ||
-                                0),
-                              100
+                              (summary.total_expenses / summary.total_income) *
+                                100 || 0,
+                              100,
                             )}%`,
                           }}
                         />
@@ -331,26 +332,26 @@ export default function Profile() {
                 <Card
                   key={index}
                   className={`border-l-4 ${
-                    tip.color === 'success'
-                      ? 'border-l-success'
-                      : tip.color === 'warning'
-                        ? 'border-l-warning'
-                        : tip.color === 'destructive'
-                          ? 'border-l-destructive'
-                          : 'border-l-primary'
+                    tip.color === "success"
+                      ? "border-l-success"
+                      : tip.color === "warning"
+                        ? "border-l-warning"
+                        : tip.color === "destructive"
+                          ? "border-l-destructive"
+                          : "border-l-primary"
                   }`}
                 >
                   <CardBody>
                     <div className="flex gap-4">
                       <div
                         className={`flex-shrink-0 p-3 rounded-lg ${
-                          tip.color === 'success'
-                            ? 'bg-success/10 text-success'
-                            : tip.color === 'warning'
-                              ? 'bg-warning/10 text-warning'
-                              : tip.color === 'destructive'
-                                ? 'bg-destructive/10 text-destructive'
-                                : 'bg-primary/10 text-primary'
+                          tip.color === "success"
+                            ? "bg-success/10 text-success"
+                            : tip.color === "warning"
+                              ? "bg-warning/10 text-warning"
+                              : tip.color === "destructive"
+                                ? "bg-destructive/10 text-destructive"
+                                : "bg-primary/10 text-primary"
                         }`}
                       >
                         {tip.icon}
@@ -379,35 +380,45 @@ export default function Profile() {
             <CardBody>
               <ul className="space-y-3">
                 <li className="flex gap-3">
-                  <span className="text-primary font-bold flex-shrink-0">✓</span>
+                  <span className="text-primary font-bold flex-shrink-0">
+                    ✓
+                  </span>
                   <span className="text-sm text-foreground">
                     <strong>50/30/20 Rule:</strong> Allocate 50% of income to
                     needs, 30% to wants, and 20% to savings and debt repayment.
                   </span>
                 </li>
                 <li className="flex gap-3">
-                  <span className="text-primary font-bold flex-shrink-0">✓</span>
+                  <span className="text-primary font-bold flex-shrink-0">
+                    ✓
+                  </span>
                   <span className="text-sm text-foreground">
                     <strong>Track Every Expense:</strong> Small expenses add up.
                     Recording all transactions helps identify waste.
                   </span>
                 </li>
                 <li className="flex gap-3">
-                  <span className="text-primary font-bold flex-shrink-0">✓</span>
+                  <span className="text-primary font-bold flex-shrink-0">
+                    ✓
+                  </span>
                   <span className="text-sm text-foreground">
-                    <strong>Automate Savings:</strong> Set up automatic transfers
-                    to savings as soon as you get paid.
+                    <strong>Automate Savings:</strong> Set up automatic
+                    transfers to savings as soon as you get paid.
                   </span>
                 </li>
                 <li className="flex gap-3">
-                  <span className="text-primary font-bold flex-shrink-0">✓</span>
+                  <span className="text-primary font-bold flex-shrink-0">
+                    ✓
+                  </span>
                   <span className="text-sm text-foreground">
                     <strong>Cut Unnecessary Subscriptions:</strong> Review
                     subscriptions monthly and cancel what you don't use.
                   </span>
                 </li>
                 <li className="flex gap-3">
-                  <span className="text-primary font-bold flex-shrink-0">✓</span>
+                  <span className="text-primary font-bold flex-shrink-0">
+                    ✓
+                  </span>
                   <span className="text-sm text-foreground">
                     <strong>Build an Emergency Fund:</strong> Aim for 3-6 months
                     of expenses saved before investing.

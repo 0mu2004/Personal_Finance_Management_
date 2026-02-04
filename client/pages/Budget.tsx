@@ -1,32 +1,36 @@
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { budgetsAPI, Budget } from '@/api/budgets';
-import { Navbar } from '@/components/Navbar';
-import { Card, CardHeader, CardBody } from '@/components/Card';
-import { Button } from '@/components/Button';
-import { Modal } from '@/components/Modal';
-import { FormInput, FormSelect } from '@/components/FormInput';
-import { Plus, Trash2 } from 'lucide-react';
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { budgetsAPI, Budget } from "@/api/budgets";
+import { Navbar } from "@/components/Navbar";
+import { Card, CardHeader, CardBody } from "@/components/Card";
+import { Button } from "@/components/Button";
+import { Modal } from "@/components/Modal";
+import { FormInput, FormSelect } from "@/components/FormInput";
+import { Plus, Trash2 } from "lucide-react";
 
 const CATEGORIES = [
-  { value: 'food', label: 'Food & Dining' },
-  { value: 'transport', label: 'Transportation' },
-  { value: 'utilities', label: 'Utilities' },
-  { value: 'entertainment', label: 'Entertainment' },
-  { value: 'shopping', label: 'Shopping' },
-  { value: 'other', label: 'Other' },
+  { value: "food", label: "Food & Dining" },
+  { value: "transport", label: "Transportation" },
+  { value: "utilities", label: "Utilities" },
+  { value: "entertainment", label: "Entertainment" },
+  { value: "shopping", label: "Shopping" },
+  { value: "other", label: "Other" },
 ];
 
 export default function BudgetPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
-    category: '',
-    limit: '',
+    category: "",
+    limit: "",
     month: new Date().toISOString().slice(0, 7),
   });
 
-  const { data: budgets = [], refetch, isLoading } = useQuery({
-    queryKey: ['budgets'],
+  const {
+    data: budgets = [],
+    refetch,
+    isLoading,
+  } = useQuery({
+    queryKey: ["budgets"],
     queryFn: () => budgetsAPI.getBudgets().then((res) => res.data),
   });
 
@@ -40,32 +44,32 @@ export default function BudgetPage() {
       });
       setIsModalOpen(false);
       setFormData({
-        category: '',
-        limit: '',
+        category: "",
+        limit: "",
         month: new Date().toISOString().slice(0, 7),
       });
       refetch();
     } catch (error) {
-      console.error('Error saving budget:', error);
+      console.error("Error saving budget:", error);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this budget?')) {
+    if (window.confirm("Are you sure you want to delete this budget?")) {
       try {
         await budgetsAPI.deleteBudget(id);
         refetch();
       } catch (error) {
-        console.error('Error deleting budget:', error);
+        console.error("Error deleting budget:", error);
       }
     }
   };
 
   const getProgressColor = (spent: number, limit: number) => {
     const percentage = (spent / limit) * 100;
-    if (percentage >= 100) return 'bg-destructive';
-    if (percentage >= 80) return 'bg-warning';
-    return 'bg-success';
+    if (percentage >= 100) return "bg-destructive";
+    if (percentage >= 80) return "bg-warning";
+    return "bg-success";
   };
 
   return (
@@ -96,7 +100,9 @@ export default function BudgetPage() {
           ) : budgets.length === 0 ? (
             <Card>
               <CardBody className="text-center py-12">
-                <p className="text-muted-foreground mb-4">No budgets created yet</p>
+                <p className="text-muted-foreground mb-4">
+                  No budgets created yet
+                </p>
                 <Button onClick={() => setIsModalOpen(true)}>
                   Create your first budget
                 </Button>
@@ -124,9 +130,14 @@ export default function BudgetPage() {
                     <CardBody className="space-y-4">
                       <div>
                         <div className="flex justify-between mb-2">
-                          <span className="text-sm text-muted-foreground">Spending</span>
-                          <span className={`text-sm font-medium ${isExceeded ? 'text-destructive' : 'text-foreground'}`}>
-                            ${budget.spent.toFixed(2)} / ${budget.limit.toFixed(2)}
+                          <span className="text-sm text-muted-foreground">
+                            Spending
+                          </span>
+                          <span
+                            className={`text-sm font-medium ${isExceeded ? "text-destructive" : "text-foreground"}`}
+                          >
+                            ${budget.spent.toFixed(2)} / $
+                            {budget.limit.toFixed(2)}
                           </span>
                         </div>
                         <div className="w-full bg-muted rounded-full h-3 overflow-hidden">
@@ -140,16 +151,24 @@ export default function BudgetPage() {
                       {isExceeded && (
                         <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
                           <p className="text-sm text-destructive font-medium">
-                            ⚠️ Budget exceeded by ${(budget.spent - budget.limit).toFixed(2)}
+                            ⚠️ Budget exceeded by $
+                            {(budget.spent - budget.limit).toFixed(2)}
                           </p>
                         </div>
                       )}
 
                       <div className="grid grid-cols-2 gap-4 pt-2 border-t border-border">
                         <div>
-                          <p className="text-xs text-muted-foreground">Remaining</p>
-                          <p className={`text-lg font-bold ${budget.spent > budget.limit ? 'text-destructive' : 'text-success'}`}>
-                            ${Math.max(0, budget.limit - budget.spent).toFixed(2)}
+                          <p className="text-xs text-muted-foreground">
+                            Remaining
+                          </p>
+                          <p
+                            className={`text-lg font-bold ${budget.spent > budget.limit ? "text-destructive" : "text-success"}`}
+                          >
+                            $
+                            {Math.max(0, budget.limit - budget.spent).toFixed(
+                              2,
+                            )}
                           </p>
                         </div>
                         <div>
@@ -176,15 +195,10 @@ export default function BudgetPage() {
         size="md"
         footer={
           <>
-            <Button
-              variant="outline"
-              onClick={() => setIsModalOpen(false)}
-            >
+            <Button variant="outline" onClick={() => setIsModalOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleSubmit}>
-              Create Budget
-            </Button>
+            <Button onClick={handleSubmit}>Create Budget</Button>
           </>
         }
       >
@@ -192,7 +206,9 @@ export default function BudgetPage() {
           <FormSelect
             label="Category"
             value={formData.category}
-            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, category: e.target.value })
+            }
             options={CATEGORIES}
           />
 
@@ -203,7 +219,9 @@ export default function BudgetPage() {
             min="0"
             placeholder="0.00"
             value={formData.limit}
-            onChange={(e) => setFormData({ ...formData, limit: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, limit: e.target.value })
+            }
             required
           />
 
@@ -211,7 +229,9 @@ export default function BudgetPage() {
             label="Month"
             type="month"
             value={formData.month}
-            onChange={(e) => setFormData({ ...formData, month: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, month: e.target.value })
+            }
             required
           />
         </form>

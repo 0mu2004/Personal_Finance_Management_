@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
 interface StatCardProps {
   title: string;
   value: string | number;
   icon?: React.ReactNode;
-  color?: 'primary' | 'success' | 'warning' | 'destructive';
+  color?: "primary" | "success" | "warning" | "destructive";
   trend?: { value: number; isPositive: boolean };
 }
 
@@ -12,14 +12,14 @@ export const StatCard: React.FC<StatCardProps> = ({
   title,
   value,
   icon,
-  color = 'primary',
+  color = "primary",
   trend,
 }) => {
   const colorClasses = {
-    primary: 'bg-blue-50 text-primary',
-    success: 'bg-green-50 text-success',
-    warning: 'bg-yellow-50 text-warning',
-    destructive: 'bg-red-50 text-destructive',
+    primary: "bg-blue-50 text-primary",
+    success: "bg-green-50 text-success",
+    warning: "bg-yellow-50 text-warning",
+    destructive: "bg-red-50 text-destructive",
   };
 
   return (
@@ -34,10 +34,11 @@ export const StatCard: React.FC<StatCardProps> = ({
             {trend && (
               <span
                 className={`text-sm font-medium ${
-                  trend.isPositive ? 'text-success' : 'text-destructive'
+                  trend.isPositive ? "text-success" : "text-destructive"
                 }`}
               >
-                {trend.isPositive ? '+' : ''}{trend.value}%
+                {trend.isPositive ? "+" : ""}
+                {trend.value}%
               </span>
             )}
           </div>

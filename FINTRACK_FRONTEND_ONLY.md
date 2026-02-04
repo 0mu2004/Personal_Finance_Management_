@@ -14,6 +14,7 @@ A **complete, production-ready personal finance tracker web app** with:
 ## What's Included
 
 ### Pages
+
 - **Home** - Landing page with features overview
 - **Register** - Create new account
 - **Login** - Sign in with email/password
@@ -25,6 +26,7 @@ A **complete, production-ready personal finance tracker web app** with:
 ### Features
 
 #### 💰 Dashboard
+
 - Real-time financial metrics
 - Total income, expenses, savings
 - Category spending breakdown (Pie Chart)
@@ -32,6 +34,7 @@ A **complete, production-ready personal finance tracker web app** with:
 - Savings rate calculation
 
 #### 📝 Transactions
+
 - Add income or expense transactions
 - Categorize spending
 - Edit and delete transactions
@@ -39,6 +42,7 @@ A **complete, production-ready personal finance tracker web app** with:
 - Full transaction history
 
 #### 💳 Budget Management
+
 - Set monthly budgets per category
 - Track spending vs limits
 - Visual progress bars
@@ -46,6 +50,7 @@ A **complete, production-ready personal finance tracker web app** with:
 - Remaining budget display
 
 #### 🎯 Savings Goals
+
 - Create financial goals
 - Track progress with percentages
 - Monitor deadline countdown
@@ -53,6 +58,7 @@ A **complete, production-ready personal finance tracker web app** with:
 - Edit and delete goals
 
 #### 🎨 UI/UX
+
 - Responsive design (mobile, tablet, desktop)
 - Beautiful fintech styling
 - Smooth animations
@@ -62,6 +68,7 @@ A **complete, production-ready personal finance tracker web app** with:
 ## How It Works
 
 ### Authentication (Local)
+
 1. User registers with name, email, password
 2. Account stored in browser's localStorage
 3. Login validates against stored accounts
@@ -69,12 +76,14 @@ A **complete, production-ready personal finance tracker web app** with:
 5. Protected pages require authentication
 
 ### Data Storage
+
 - **Users**: localStorage → 'users' key
 - **Transactions**: localStorage → 'transactions' key
 - **Budgets**: localStorage → 'budgets' key
 - **Goals**: localStorage → 'goals' key
 
 ### API Layer
+
 - Mock API client (`client/api/axiosClient.ts`)
 - Simulates backend responses
 - 100ms delay for realistic feel
@@ -122,22 +131,27 @@ client/
 ## Getting Started
 
 ### 1. Install
+
 ```bash
 pnpm install
 ```
 
 ### 2. Run
+
 ```bash
 pnpm dev
 ```
+
 Opens at http://localhost:8080
 
 ### 3. Register
+
 - Click "Register"
 - Create an account
 - You're logged in!
 
 ### 4. Start Using
+
 - Add transactions
 - Create budgets
 - Set goals
@@ -146,6 +160,7 @@ Opens at http://localhost:8080
 ## Development
 
 ### Commands
+
 ```bash
 pnpm dev          # Start dev server
 pnpm build        # Build for production
@@ -156,6 +171,7 @@ pnpm format.fix   # Format code
 ```
 
 ### Technologies
+
 - **React 18** - UI
 - **TypeScript** - Type safety
 - **Vite** - Build tool
@@ -169,18 +185,21 @@ pnpm format.fix   # Format code
 ## Deployment
 
 ### Netlify (Easiest)
+
 ```bash
 pnpm build
 # Drag dist/ folder to Netlify
 ```
 
 ### Vercel
+
 ```bash
 pnpm build
 # Connect GitHub repo to Vercel
 ```
 
 ### GitHub Pages
+
 ```bash
 # Update vite.config.ts base: '/repo-name/'
 pnpm build
@@ -188,6 +207,7 @@ pnpm build
 ```
 
 ### Any Static Host
+
 ```bash
 pnpm build
 # Upload dist/ folder
@@ -198,6 +218,7 @@ pnpm build
 ### Important Notes
 
 ⚠️ **LocalStorage is per-browser:**
+
 - Data doesn't sync across devices
 - Private/Incognito mode loses data
 - Clearing cache deletes data
@@ -206,42 +227,48 @@ pnpm build
 ### Backup Your Data
 
 **Export:**
+
 ```javascript
 // In browser console (F12):
-JSON.stringify(localStorage)
+JSON.stringify(localStorage);
 // Copy to a text file
 ```
 
 **Import:**
+
 ```javascript
 // Paste data into console to restore
-Object.entries(JSON.parse(yourData))
-  .forEach(([key, value]) => 
-    localStorage.setItem(key, JSON.stringify(value))
-  )
+Object.entries(JSON.parse(yourData)).forEach(([key, value]) =>
+  localStorage.setItem(key, JSON.stringify(value)),
+);
 ```
 
 ## Customization
 
 ### Change Colors
+
 Edit `client/global.css`:
+
 ```css
---primary: 210 100% 50%;      /* Blue */
---secondary: 160 100% 42%;    /* Green */
+--primary: 210 100% 50%; /* Blue */
+--secondary: 160 100% 42%; /* Green */
 --destructive: 0 84.2% 60.2%; /* Red */
 ```
 
 ### Add Categories
+
 Edit transaction pages:
+
 ```typescript
 const CATEGORIES = [
-  { value: 'groceries', label: 'Groceries' },
-  { value: 'gas', label: 'Gas' },
+  { value: "groceries", label: "Groceries" },
+  { value: "gas", label: "Gas" },
   // Add more...
 ];
 ```
 
 ### Customize Components
+
 All components in `client/components/` and `client/pages/` use Tailwind CSS and are fully customizable.
 
 ## Performance
@@ -255,6 +282,7 @@ All components in `client/components/` and `client/pages/` use Tailwind CSS and 
 ## Troubleshooting
 
 ### App Won't Start
+
 ```bash
 rm -rf node_modules
 pnpm install
@@ -262,17 +290,20 @@ pnpm dev
 ```
 
 ### Port 8080 in Use
+
 ```bash
 pnpm dev -- --port 3000
 ```
 
 ### Data Not Saving
+
 - Check if localStorage is enabled
 - Check if not in private/incognito mode
 - Check browser console (F12) for errors
 - Try different browser
 
 ### Charts Not Showing
+
 - Add transactions to populate data
 - Refresh browser
 - Check console for errors
@@ -307,10 +338,12 @@ pnpm dev -- --port 3000
 ## Support
 
 ### Docs
+
 - [README.md](README.md) - Full documentation
 - [QUICK_START.md](QUICK_START.md) - Quick setup guide
 
 ### Debug
+
 - **Console**: F12 > Console tab for errors
 - **LocalStorage**: F12 > Application > LocalStorage
 - **Network**: F12 > Network tab (though no API calls)
@@ -327,6 +360,7 @@ pnpm dev -- --port 3000
 ## Summary
 
 You have a **complete, modern, production-ready personal finance tracker** that:
+
 - Runs entirely in the browser
 - Requires no backend
 - Has beautiful UI

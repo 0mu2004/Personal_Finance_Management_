@@ -1,4 +1,4 @@
-import axiosClient from './axiosClient';
+import axiosClient from "./axiosClient";
 
 export interface Goal {
   id: string;
@@ -18,15 +18,13 @@ export interface CreateGoalRequest {
 }
 
 export const goalsAPI = {
-  getGoals: () =>
-    axiosClient.get<Goal[]>('/goals'),
+  getGoals: () => axiosClient.get<Goal[]>("/goals"),
 
   createGoal: (data: CreateGoalRequest) =>
-    axiosClient.post<Goal>('/goals', data),
+    axiosClient.post<Goal>("/goals", data),
 
   updateGoal: (id: string, data: Partial<CreateGoalRequest>) =>
     axiosClient.put<Goal>(`/goals/${id}`, data),
 
-  deleteGoal: (id: string) =>
-    axiosClient.delete(`/goals/${id}`),
+  deleteGoal: (id: string) => axiosClient.delete(`/goals/${id}`),
 };

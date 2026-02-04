@@ -1,38 +1,42 @@
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { transactionsAPI, Transaction } from '@/api/transactions';
-import { Navbar } from '@/components/Navbar';
-import { Card, CardHeader, CardBody } from '@/components/Card';
-import { Button } from '@/components/Button';
-import { Modal } from '@/components/Modal';
-import { FormInput, FormSelect } from '@/components/FormInput';
-import { Plus, Trash2, Edit2 } from 'lucide-react';
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { transactionsAPI, Transaction } from "@/api/transactions";
+import { Navbar } from "@/components/Navbar";
+import { Card, CardHeader, CardBody } from "@/components/Card";
+import { Button } from "@/components/Button";
+import { Modal } from "@/components/Modal";
+import { FormInput, FormSelect } from "@/components/FormInput";
+import { Plus, Trash2, Edit2 } from "lucide-react";
 
 const CATEGORIES = [
-  { value: 'food', label: 'Food & Dining' },
-  { value: 'transport', label: 'Transportation' },
-  { value: 'utilities', label: 'Utilities' },
-  { value: 'entertainment', label: 'Entertainment' },
-  { value: 'shopping', label: 'Shopping' },
-  { value: 'salary', label: 'Salary' },
-  { value: 'bonus', label: 'Bonus' },
-  { value: 'investment', label: 'Investment' },
-  { value: 'other', label: 'Other' },
+  { value: "food", label: "Food & Dining" },
+  { value: "transport", label: "Transportation" },
+  { value: "utilities", label: "Utilities" },
+  { value: "entertainment", label: "Entertainment" },
+  { value: "shopping", label: "Shopping" },
+  { value: "salary", label: "Salary" },
+  { value: "bonus", label: "Bonus" },
+  { value: "investment", label: "Investment" },
+  { value: "other", label: "Other" },
 ];
 
 export default function Transactions() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
-    type: 'expense' as 'income' | 'expense',
-    amount: '',
-    category: '',
-    description: '',
-    date: new Date().toISOString().split('T')[0],
+    type: "expense" as "income" | "expense",
+    amount: "",
+    category: "",
+    description: "",
+    date: new Date().toISOString().split("T")[0],
   });
 
-  const { data: transactions = [], refetch, isLoading } = useQuery({
-    queryKey: ['transactions'],
+  const {
+    data: transactions = [],
+    refetch,
+    isLoading,
+  } = useQuery({
+    queryKey: ["transactions"],
     queryFn: () => transactionsAPI.getTransactions().then((res) => res.data),
   });
 
@@ -44,16 +48,16 @@ export default function Transactions() {
         amount: transaction.amount.toString(),
         category: transaction.category,
         description: transaction.description,
-        date: transaction.date.split('T')[0],
+        date: transaction.date.split("T")[0],
       });
     } else {
       setEditingId(null);
       setFormData({
-        type: 'expense',
-        amount: '',
-        category: '',
-        description: '',
-        date: new Date().toISOString().split('T')[0],
+        type: "expense",
+        amount: "",
+        category: "",
+        description: "",
+        date: new Date().toISOString().split("T")[0],
       });
     }
     setIsModalOpen(true);
@@ -77,17 +81,17 @@ export default function Transactions() {
       setIsModalOpen(false);
       refetch();
     } catch (error) {
-      console.error('Error saving transaction:', error);
+      console.error("Error saving transaction:", error);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this transaction?')) {
+    if (window.confirm("Are you sure you want to delete this transaction?")) {
       try {
         await transactionsAPI.deleteTransaction(id);
         refetch();
       } catch (error) {
-        console.error('Error deleting transaction:', error);
+        console.error("Error deleting transaction:", error);
       }
     }
   };
@@ -100,7 +104,9 @@ export default function Transactions() {
           {/* Header */}
           <div className="flex justify-between items-start mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-foreground">Transactions</h1>
+              <h1 className="text-3xl font-bold text-foreground">
+                Transactions
+              </h1>
               <p className="text-muted-foreground mt-2">
                 Manage your income and expenses
               </p>
@@ -117,11 +123,15 @@ export default function Transactions() {
               {isLoading ? (
                 <div className="text-center py-8">
                   <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
-                  <p className="mt-4 text-muted-foreground">Loading transactions...</p>
+                  <p className="mt-4 text-muted-foreground">
+                    Loading transactions...
+                  </p>
                 </div>
               ) : transactions.length === 0 ? (
                 <div className="text-center py-12">
-                  <p className="text-muted-foreground mb-4">No transactions yet</p>
+                  <p className="text-muted-foreground mb-4">
+                    No transactions yet
+                  </p>
                   <Button onClick={() => handleOpenModal()}>
                     Add your first transaction
                   </Button>
@@ -131,17 +141,32 @@ export default function Transactions() {
                   <table className="w-full text-sm">
                     <thead className="border-b border-border">
                       <tr>
-                        <th className="text-left py-3 px-4 font-medium text-foreground">Date</th>
-                        <th className="text-left py-3 px-4 font-medium text-foreground">Category</th>
-                        <th className="text-left py-3 px-4 font-medium text-foreground">Description</th>
-                        <th className="text-right py-3 px-4 font-medium text-foreground">Amount</th>
-                        <th className="text-center py-3 px-4 font-medium text-foreground">Type</th>
-                        <th className="text-right py-3 px-4 font-medium text-foreground">Actions</th>
+                        <th className="text-left py-3 px-4 font-medium text-foreground">
+                          Date
+                        </th>
+                        <th className="text-left py-3 px-4 font-medium text-foreground">
+                          Category
+                        </th>
+                        <th className="text-left py-3 px-4 font-medium text-foreground">
+                          Description
+                        </th>
+                        <th className="text-right py-3 px-4 font-medium text-foreground">
+                          Amount
+                        </th>
+                        <th className="text-center py-3 px-4 font-medium text-foreground">
+                          Type
+                        </th>
+                        <th className="text-right py-3 px-4 font-medium text-foreground">
+                          Actions
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
                       {transactions.map((transaction) => (
-                        <tr key={transaction.id} className="border-b border-border hover:bg-muted/50">
+                        <tr
+                          key={transaction.id}
+                          className="border-b border-border hover:bg-muted/50"
+                        >
                           <td className="py-4 px-4 text-foreground">
                             {new Date(transaction.date).toLocaleDateString()}
                           </td>
@@ -153,20 +178,26 @@ export default function Transactions() {
                           <td className="py-4 px-4 text-foreground">
                             {transaction.description}
                           </td>
-                          <td className={`py-4 px-4 text-right font-medium ${
-                            transaction.type === 'income'
-                              ? 'text-success'
-                              : 'text-foreground'
-                          }`}>
-                            {transaction.type === 'income' ? '+' : '-'}${transaction.amount.toFixed(2)}
+                          <td
+                            className={`py-4 px-4 text-right font-medium ${
+                              transaction.type === "income"
+                                ? "text-success"
+                                : "text-foreground"
+                            }`}
+                          >
+                            {transaction.type === "income" ? "+" : "-"}$
+                            {transaction.amount.toFixed(2)}
                           </td>
                           <td className="py-4 px-4 text-center">
-                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                              transaction.type === 'income'
-                                ? 'bg-success/10 text-success'
-                                : 'bg-destructive/10 text-destructive'
-                            }`}>
-                              {transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1)}
+                            <span
+                              className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                transaction.type === "income"
+                                  ? "bg-success/10 text-success"
+                                  : "bg-destructive/10 text-destructive"
+                              }`}
+                            >
+                              {transaction.type.charAt(0).toUpperCase() +
+                                transaction.type.slice(1)}
                             </span>
                           </td>
                           <td className="py-4 px-4 text-right">
@@ -200,18 +231,15 @@ export default function Transactions() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingId ? 'Edit Transaction' : 'Add Transaction'}
+        title={editingId ? "Edit Transaction" : "Add Transaction"}
         size="md"
         footer={
           <>
-            <Button
-              variant="outline"
-              onClick={() => setIsModalOpen(false)}
-            >
+            <Button variant="outline" onClick={() => setIsModalOpen(false)}>
               Cancel
             </Button>
             <Button onClick={handleSubmit}>
-              {editingId ? 'Update' : 'Add'} Transaction
+              {editingId ? "Update" : "Add"} Transaction
             </Button>
           </>
         }
@@ -221,11 +249,14 @@ export default function Transactions() {
             label="Type"
             value={formData.type}
             onChange={(e) =>
-              setFormData({ ...formData, type: e.target.value as 'income' | 'expense' })
+              setFormData({
+                ...formData,
+                type: e.target.value as "income" | "expense",
+              })
             }
             options={[
-              { value: 'income', label: 'Income' },
-              { value: 'expense', label: 'Expense' },
+              { value: "income", label: "Income" },
+              { value: "expense", label: "Expense" },
             ]}
           />
 
@@ -236,14 +267,18 @@ export default function Transactions() {
             min="0"
             placeholder="0.00"
             value={formData.amount}
-            onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, amount: e.target.value })
+            }
             required
           />
 
           <FormSelect
             label="Category"
             value={formData.category}
-            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, category: e.target.value })
+            }
             options={CATEGORIES}
           />
 
@@ -252,7 +287,9 @@ export default function Transactions() {
             type="text"
             placeholder="What is this transaction for?"
             value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, description: e.target.value })
+            }
           />
 
           <FormInput
