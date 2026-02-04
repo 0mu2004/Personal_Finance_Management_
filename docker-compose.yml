@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: fintrack-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: fintrack
+      MONGO_INITDB_ROOT_PASSWORD: fintrack123
+      MONGO_INITDB_DATABASE: fintrack
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - fintrack
+
+  fastapi:
+    build: ./backend
+    container_name: fintrack-api
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      MONGO_URI: mongodb://fintrack:fintrack123@mongodb:27017/fintrack
+      DATABASE_NAME: fintrack
+      SECRET_KEY: your-secret-key-change-in-production
+      CORS_ORIGINS: http://localhost:5173,http://localhost:3000,http://localhost:8080
+    depends_on:
+      - mongodb
+    networks:
+      - fintrack
+    volumes:
+      - ./backend:/app
+
+volumes:
+  mongodb_data:
+
+networks:
+  fintrack:
+    driver: bridge
