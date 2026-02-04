@@ -14,6 +14,7 @@ import Dashboard from "./pages/Dashboard";
 import Transactions from "./pages/Transactions";
 import BudgetPage from "./pages/Budget";
 import Goals from "./pages/Goals";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
