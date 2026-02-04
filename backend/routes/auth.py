@@ -67,6 +67,3 @@ async def login(request: LoginRequest):
             id=user_id, name=user["name"], email=user["email"]
         ),
     )
-
-
-from datetime import datetime
