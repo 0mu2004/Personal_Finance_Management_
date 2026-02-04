@@ -89,7 +89,12 @@ export const Navbar = () => {
 
           {/* Desktop User Menu */}
           <div className="hidden md:flex items-center gap-4">
-            <span className="text-sm text-muted-foreground">{user?.name}</span>
+            <Link
+              to="/profile"
+              className="text-sm text-muted-foreground hover:text-primary transition font-medium"
+            >
+              👤 {user?.name}
+            </Link>
             <button
               onClick={handleLogout}
               className="flex items-center gap-2 px-4 py-2 text-destructive hover:bg-destructive/10 rounded-lg transition"
