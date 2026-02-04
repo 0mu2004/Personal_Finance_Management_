@@ -144,6 +144,13 @@ export const Navbar = () => {
             >
               Goals
             </Link>
+            <Link
+              to="/profile"
+              className="block px-4 py-2 text-foreground hover:bg-muted rounded-lg transition"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              👤 Profile
+            </Link>
             <button
               onClick={handleLogout}
               className="w-full text-left flex items-center gap-2 px-4 py-2 text-destructive hover:bg-destructive/10 rounded-lg transition"
