@@ -107,5 +107,5 @@ class DashboardSummary(BaseModel):
     total_income: float
     total_expenses: float
     savings: float
-    category_breakdown: dict
+    category_breakdown: Dict[str, float]
     monthly_spending: List[MonthlySpendings]
