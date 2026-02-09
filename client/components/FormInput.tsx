@@ -8,7 +8,7 @@ interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
-  ({ label, error, containerClassName = "", ...props }, ref) => (
+  ({ label, error, helpText, containerClassName = "", ...props }, ref) => (
     <div className={containerClassName}>
       {label && (
         <label className="block text-sm font-medium text-foreground mb-2">
@@ -22,6 +22,7 @@ export const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
         }`}
         {...props}
       />
+      {helpText && <p className="text-xs text-muted-foreground mt-1">{helpText}</p>}
       {error && <p className="text-sm text-destructive mt-1">{error}</p>}
     </div>
   ),
