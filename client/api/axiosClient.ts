@@ -208,6 +208,28 @@ class MockAxios {
     }
   }
 
+  private calculateBudgetSpent(budgets: any[]): any[] {
+    const transactions = JSON.parse(
+      localStorage.getItem("transactions") || "[]",
+    );
+
+    return budgets.map((budget: any) => {
+      const spent = transactions
+        .filter(
+          (t: any) =>
+            t.type === "expense" &&
+            t.category === budget.category &&
+            t.date.substring(0, 7) === budget.month,
+        )
+        .reduce((sum: number, t: any) => sum + t.amount, 0);
+
+      return {
+        ...budget,
+        spent,
+      };
+    });
+  }
+
   private calculateDashboardSummary(): any {
     const transactions = JSON.parse(
       localStorage.getItem("transactions") || "[]",
