@@ -87,7 +87,12 @@ export const GoalsProgress = ({ goals }: GoalsProgressProps) => {
               <div className="flex justify-between text-xs text-muted-foreground">
                 <span>{Math.min(percentage, 100).toFixed(0)}%</span>
                 <span>
-                  ${Math.max(0, goal.target_amount - goal.current_amount).toFixed(2)} remaining
+                  $
+                  {Math.max(
+                    0,
+                    goal.target_amount - goal.current_amount,
+                  ).toFixed(2)}{" "}
+                  remaining
                 </span>
               </div>
             </div>

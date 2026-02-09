@@ -23,7 +23,10 @@ export const getChartColor = (index: number, colors = CHART_COLORS): string => {
   return colors[index % colors.length];
 };
 
-export const formatChartDate = (date: string, format: "short" | "long" = "short"): string => {
+export const formatChartDate = (
+  date: string,
+  format: "short" | "long" = "short",
+): string => {
   const d = new Date(date);
   if (format === "short") {
     return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
@@ -72,7 +75,10 @@ export const groupDataByPeriod = (
         key = `${date.getFullYear()}-W${week}`;
         break;
       case "monthly":
-        key = date.toLocaleDateString("en-US", { year: "numeric", month: "short" });
+        key = date.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+        });
         break;
     }
 

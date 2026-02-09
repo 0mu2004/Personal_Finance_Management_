@@ -295,7 +295,9 @@ export default function Goals() {
         <form className="space-y-4">
           <div className="p-3 bg-primary/5 border border-primary/20 rounded-lg mb-4">
             <p className="text-sm text-foreground">
-              <strong>How it works:</strong> Set your target amount, add your starting amount, then use "Add Funds" on the goal card to increase your progress.
+              <strong>How it works:</strong> Set your target amount, add your
+              starting amount, then use "Add Funds" on the goal card to increase
+              your progress.
             </p>
           </div>
 
@@ -364,7 +366,10 @@ export default function Goals() {
             >
               Cancel
             </Button>
-            <Button onClick={handleAddFunds} disabled={!fundsAmount || parseFloat(fundsAmount) <= 0}>
+            <Button
+              onClick={handleAddFunds}
+              disabled={!fundsAmount || parseFloat(fundsAmount) <= 0}
+            >
               Add Funds
             </Button>
           </>
@@ -373,7 +378,8 @@ export default function Goals() {
         <form className="space-y-4" onSubmit={handleAddFunds}>
           <div className="p-3 bg-success/5 border border-success/20 rounded-lg">
             <p className="text-sm text-foreground">
-              Enter the amount you want to add to this goal. It will be added to your current progress.
+              Enter the amount you want to add to this goal. It will be added to
+              your current progress.
             </p>
           </div>
           <FormInput

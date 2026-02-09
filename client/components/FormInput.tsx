@@ -22,7 +22,9 @@ export const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
         }`}
         {...props}
       />
-      {helpText && <p className="text-xs text-muted-foreground mt-1">{helpText}</p>}
+      {helpText && (
+        <p className="text-xs text-muted-foreground mt-1">{helpText}</p>
+      )}
       {error && <p className="text-sm text-destructive mt-1">{error}</p>}
     </div>
   ),
