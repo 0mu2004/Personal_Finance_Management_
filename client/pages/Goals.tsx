@@ -344,6 +344,7 @@ export default function Goals() {
             onChange={(e) =>
               setFormData({ ...formData, deadline: e.target.value })
             }
+            helpText="When do you want to achieve this goal?"
             required
           />
         </form>
