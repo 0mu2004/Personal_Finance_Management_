@@ -293,12 +293,19 @@ export default function Goals() {
         }
       >
         <form className="space-y-4">
+          <div className="p-3 bg-primary/5 border border-primary/20 rounded-lg mb-4">
+            <p className="text-sm text-foreground">
+              <strong>How it works:</strong> Set your target amount, add your starting amount, then use "Add Funds" on the goal card to increase your progress.
+            </p>
+          </div>
+
           <FormInput
             label="Goal Name"
             type="text"
             placeholder="e.g., Emergency Fund"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            helpText="What are you saving for?"
             required
           />
 
@@ -312,6 +319,7 @@ export default function Goals() {
             onChange={(e) =>
               setFormData({ ...formData, target_amount: e.target.value })
             }
+            helpText="The total amount you want to save"
             required
           />
 
