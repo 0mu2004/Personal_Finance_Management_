@@ -3,6 +3,7 @@ import React from "react";
 interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
+  helpText?: string;
   containerClassName?: string;
 }
 
