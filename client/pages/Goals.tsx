@@ -325,6 +325,7 @@ export default function Goals() {
             onChange={(e) =>
               setFormData({ ...formData, starting_amount: e.target.value })
             }
+            helpText="How much you've already saved for this goal"
             required
           />
 
