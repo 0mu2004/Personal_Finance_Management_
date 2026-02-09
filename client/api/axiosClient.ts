@@ -147,7 +147,7 @@ class MockAxios {
   }
 
   private mockPut(url: string, data: any): any {
-    const id = url.split("/").pop();
+    const id = url.split("/").slice(-2)[0];
 
     if (url.includes("/transactions/")) {
       const transactions = JSON.parse(
@@ -175,7 +175,15 @@ class MockAxios {
       const goals = JSON.parse(localStorage.getItem("goals") || "[]");
       const index = goals.findIndex((g: any) => g.id === id);
       if (index !== -1) {
-        goals[index] = { ...goals[index], ...data };
+        // Handle add-funds endpoint
+        if (url.includes("/add-funds")) {
+          goals[index] = {
+            ...goals[index],
+            current_amount: goals[index].current_amount + data.amount,
+          };
+        } else {
+          goals[index] = { ...goals[index], ...data };
+        }
         localStorage.setItem("goals", JSON.stringify(goals));
         return goals[index];
       }
