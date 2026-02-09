@@ -16,7 +16,7 @@ export default function Goals() {
   const [formData, setFormData] = useState({
     name: "",
     target_amount: "",
-    current_amount: "",
+    starting_amount: "",
     deadline: "",
   });
   const [fundsAmount, setFundsAmount] = useState("");
