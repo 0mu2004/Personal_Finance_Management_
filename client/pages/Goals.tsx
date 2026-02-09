@@ -326,7 +326,6 @@ export default function Goals() {
               setFormData({ ...formData, starting_amount: e.target.value })
             }
             required
-            helpText="The amount you currently have saved for this goal"
           />
 
           <FormInput
