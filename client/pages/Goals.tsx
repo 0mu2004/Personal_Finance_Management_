@@ -316,16 +316,17 @@ export default function Goals() {
           />
 
           <FormInput
-            label="Current Amount"
+            label="Starting Amount"
             type="number"
             step="0.01"
             min="0"
             placeholder="0.00"
-            value={formData.current_amount}
+            value={formData.starting_amount}
             onChange={(e) =>
-              setFormData({ ...formData, current_amount: e.target.value })
+              setFormData({ ...formData, starting_amount: e.target.value })
             }
             required
+            helpText="The amount you currently have saved for this goal"
           />
 
           <FormInput
