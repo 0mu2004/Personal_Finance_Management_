@@ -279,7 +279,7 @@ export default function Goals() {
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingId ? "Edit Goal" : "Add Goal"}
+        title={editingId ? "Edit Goal" : "Create New Goal"}
         size="md"
         footer={
           <>
