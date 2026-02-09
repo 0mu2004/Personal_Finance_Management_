@@ -1,37 +1,64 @@
 import { useQuery } from "@tanstack/react-query";
 import { dashboardAPI } from "@/api/dashboard";
+import { transactionsAPI } from "@/api/transactions";
+import { budgetsAPI } from "@/api/budgets";
+import { goalsAPI } from "@/api/goals";
 import { Navbar } from "@/components/Navbar";
-import { StatCard } from "@/components/StatCard";
-import { ChartCard } from "@/components/ChartCard";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-import { TrendingUp, TrendingDown, Target, DollarSign } from "lucide-react";
+import { SummaryCards } from "@/components/analytics/SummaryCards";
+import { ExpenseTrendChart } from "@/components/analytics/ExpenseTrendChart";
+import { CategoryPieChart } from "@/components/analytics/CategoryPieChart";
+import { BudgetProgress } from "@/components/analytics/BudgetProgress";
+import { GoalsProgress } from "@/components/analytics/GoalsProgress";
+import { TransactionsBarChart } from "@/components/analytics/TransactionsBarChart";
 
-const COLORS = [
-  "#0084FF",
-  "#00C99A",
-  "#FFB81C",
-  "#FF6B6B",
-  "#6C5CE7",
-  "#FD79A8",
-];
+// Helper to group transactions by date for bar chart
+const getTransactionsByDate = (transactions: any[]) => {
+  const grouped: { [key: string]: { income: number; expense: number } } = {};
+
+  transactions.forEach((t) => {
+    const date = t.date.split("T")[0]; // Get YYYY-MM-DD
+    if (!grouped[date]) {
+      grouped[date] = { income: 0, expense: 0 };
+    }
+    if (t.type === "income") {
+      grouped[date].income += t.amount;
+    } else {
+      grouped[date].expense += t.amount;
+    }
+  });
+
+  return Object.entries(grouped)
+    .map(([date, data]) => ({
+      date,
+      ...data,
+    }))
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+    .slice(-30); // Last 30 days
+};
 
 export default function Dashboard() {
-  const { data: summary, isLoading } = useQuery({
+  const { data: summary, isLoading: summaryLoading } = useQuery({
     queryKey: ["dashboard-summary"],
     queryFn: () => dashboardAPI.getSummary().then((res) => res.data),
   });
+
+  const { data: transactions = [], isLoading: transactionsLoading } = useQuery({
+    queryKey: ["transactions"],
+    queryFn: () => transactionsAPI.getTransactions().then((res) => res.data),
+  });
+
+  const { data: budgets = [], isLoading: budgetsLoading } = useQuery({
+    queryKey: ["budgets"],
+    queryFn: () => budgetsAPI.getBudgets().then((res) => res.data),
+  });
+
+  const { data: goals = [], isLoading: goalsLoading } = useQuery({
+    queryKey: ["goals"],
+    queryFn: () => goalsAPI.getGoals().then((res) => res.data),
+  });
+
+  const isLoading =
+    summaryLoading || transactionsLoading || budgetsLoading || goalsLoading;
 
   if (isLoading) {
     return (
@@ -61,12 +88,13 @@ export default function Dashboard() {
   // Prepare chart data
   const categoryData = summary.category_breakdown
     ? Object.entries(summary.category_breakdown).map(([key, value]) => ({
-        name: key,
-        value: value,
+        name: key.charAt(0).toUpperCase() + key.slice(1),
+        value,
       }))
     : [];
 
   const monthlyData = summary.monthly_spending || [];
+  const dailyTransactionData = getTransactionsByDate(transactions);
 
   return (
     <>
@@ -77,100 +105,30 @@ export default function Dashboard() {
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
             <p className="text-muted-foreground mt-2">
-              Get a snapshot of your financial health
+              Your complete financial overview and analytics
             </p>
           </div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <StatCard
-              title="Total Income"
-              value={`$${summary.total_income.toFixed(2)}`}
-              icon={<TrendingUp size={24} />}
-              color="success"
-              trend={{ value: 12, isPositive: true }}
-            />
-            <StatCard
-              title="Total Expenses"
-              value={`$${summary.total_expenses.toFixed(2)}`}
-              icon={<TrendingDown size={24} />}
-              color="destructive"
-              trend={{ value: 5, isPositive: false }}
-            />
-            <StatCard
-              title="Savings"
-              value={`$${summary.savings.toFixed(2)}`}
-              icon={<Target size={24} />}
-              color="primary"
-              trend={{ value: 8, isPositive: true }}
-            />
-            <StatCard
-              title="Savings Rate"
-              value={`${summary.total_income > 0 ? ((summary.savings / summary.total_income) * 100).toFixed(1) : 0}%`}
-              icon={<DollarSign size={24} />}
-              color="warning"
-            />
+          {/* Summary Cards */}
+          <div className="mb-8">
+            <SummaryCards data={summary} />
           </div>
 
-          {/* Charts */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Pie Chart */}
-            <ChartCard title="Spending by Category">
-              {categoryData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie
-                      data={categoryData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={({ name, value }) =>
-                        `${name}: $${value.toFixed(0)}`
-                      }
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {categoryData.map((_, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
-                        />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      formatter={(value) => `$${(value as number).toFixed(2)}`}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="h-80 flex items-center justify-center text-muted-foreground">
-                  No spending data available
-                </div>
-              )}
-            </ChartCard>
+          {/* Charts Row 1 */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <CategoryPieChart data={categoryData} />
+            <ExpenseTrendChart data={monthlyData} />
+          </div>
 
-            {/* Bar Chart */}
-            <ChartCard title="Monthly Spending Trend">
-              {monthlyData.length > 0 ? (
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={monthlyData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip
-                      formatter={(value) => `$${(value as number).toFixed(2)}`}
-                    />
-                    <Legend />
-                    <Bar dataKey="amount" fill="#0084FF" name="Spending" />
-                  </BarChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="h-80 flex items-center justify-center text-muted-foreground">
-                  No monthly data available
-                </div>
-              )}
-            </ChartCard>
+          {/* Charts Row 2 */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <TransactionsBarChart data={dailyTransactionData} period="daily" />
+            <BudgetProgress budgets={budgets} />
+          </div>
+
+          {/* Goals Row */}
+          <div className="mb-6">
+            <GoalsProgress goals={goals} />
           </div>
         </div>
       </div>
