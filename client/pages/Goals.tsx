@@ -65,14 +65,14 @@ export default function Goals() {
         await goalsAPI.updateGoal(editingId, {
           name: formData.name,
           target_amount: parseFloat(formData.target_amount),
-          current_amount: parseFloat(formData.current_amount),
+          current_amount: parseFloat(formData.starting_amount),
           deadline: formData.deadline,
         });
       } else {
         await goalsAPI.createGoal({
           name: formData.name,
           target_amount: parseFloat(formData.target_amount),
-          current_amount: parseFloat(formData.current_amount),
+          current_amount: parseFloat(formData.starting_amount),
           deadline: formData.deadline,
         });
       }
