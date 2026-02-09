@@ -371,6 +371,11 @@ export default function Goals() {
         }
       >
         <form className="space-y-4" onSubmit={handleAddFunds}>
+          <div className="p-3 bg-success/5 border border-success/20 rounded-lg">
+            <p className="text-sm text-foreground">
+              Enter the amount you want to add to this goal. It will be added to your current progress.
+            </p>
+          </div>
           <FormInput
             label="Amount to Add"
             type="number"
@@ -379,11 +384,9 @@ export default function Goals() {
             placeholder="0.00"
             value={fundsAmount}
             onChange={(e) => setFundsAmount(e.target.value)}
+            helpText="Enter a positive amount to add"
             required
           />
-          <p className="text-sm text-muted-foreground">
-            This amount will be added to your goal's current progress.
-          </p>
         </form>
       </Modal>
     </>
