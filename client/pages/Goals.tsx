@@ -36,7 +36,7 @@ export default function Goals() {
       setFormData({
         name: goal.name,
         target_amount: goal.target_amount.toString(),
-        current_amount: goal.current_amount.toString(),
+        starting_amount: goal.current_amount.toString(),
         deadline: goal.deadline.split("T")[0],
       });
     } else {
@@ -44,7 +44,7 @@ export default function Goals() {
       setFormData({
         name: "",
         target_amount: "",
-        current_amount: "",
+        starting_amount: "",
         deadline: "",
       });
     }
