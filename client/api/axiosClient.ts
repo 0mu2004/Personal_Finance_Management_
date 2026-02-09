@@ -58,7 +58,8 @@ class MockAxios {
       return transactions;
     }
     if (url === "/budgets") {
-      return JSON.parse(localStorage.getItem("budgets") || "[]");
+      const budgets = JSON.parse(localStorage.getItem("budgets") || "[]");
+      return this.calculateBudgetSpent(budgets);
     }
     if (url === "/goals") {
       return JSON.parse(localStorage.getItem("goals") || "[]");
