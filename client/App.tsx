@@ -70,6 +70,7 @@ const App = () => (
           />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <ChatbotWidget />
       </BrowserRouter>
     </AuthProvider>
   </QueryClientProvider>
