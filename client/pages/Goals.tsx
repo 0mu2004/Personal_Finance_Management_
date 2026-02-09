@@ -6,10 +6,12 @@ import { Card, CardHeader, CardBody } from "@/components/Card";
 import { Button } from "@/components/Button";
 import { Modal } from "@/components/Modal";
 import { FormInput } from "@/components/FormInput";
-import { Plus, Trash2, Edit2 } from "lucide-react";
+import { Plus, Trash2, Edit2, DollarSign } from "lucide-react";
 
 export default function Goals() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFundsModalOpen, setIsFundsModalOpen] = useState(false);
+  const [selectedGoalId, setSelectedGoalId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -17,6 +19,7 @@ export default function Goals() {
     current_amount: "",
     deadline: "",
   });
+  const [fundsAmount, setFundsAmount] = useState("");
 
   const {
     data: goals = [],
@@ -48,6 +51,12 @@ export default function Goals() {
     setIsModalOpen(true);
   };
 
+  const handleOpenFundsModal = (goalId: string) => {
+    setSelectedGoalId(goalId);
+    setFundsAmount("");
+    setIsFundsModalOpen(true);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -71,6 +80,24 @@ export default function Goals() {
       refetch();
     } catch (error) {
       console.error("Error saving goal:", error);
+    }
+  };
+
+  const handleAddFunds = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!selectedGoalId || !fundsAmount || parseFloat(fundsAmount) <= 0) {
+      return;
+    }
+
+    try {
+      await goalsAPI.addFunds(selectedGoalId, parseFloat(fundsAmount));
+      setIsFundsModalOpen(false);
+      setFundsAmount("");
+      setSelectedGoalId(null);
+      refetch();
+    } catch (error) {
+      console.error("Error adding funds:", error);
     }
   };
 
@@ -146,12 +173,14 @@ export default function Goals() {
                           <button
                             onClick={() => handleOpenModal(goal)}
                             className="text-primary hover:bg-primary/10 p-2 rounded-lg transition"
+                            title="Edit goal"
                           >
                             <Edit2 size={18} />
                           </button>
                           <button
                             onClick={() => handleDelete(goal.id)}
                             className="text-destructive hover:bg-destructive/10 p-2 rounded-lg transition"
+                            title="Delete goal"
                           >
                             <Trash2 size={18} />
                           </button>
@@ -227,6 +256,16 @@ export default function Goals() {
                       <div className="text-xs text-muted-foreground text-center pt-2 border-t border-border">
                         Deadline: {new Date(goal.deadline).toLocaleDateString()}
                       </div>
+
+                      {/* Add Funds Button */}
+                      <Button
+                        onClick={() => handleOpenFundsModal(goal.id)}
+                        className="w-full mt-4"
+                        variant="outline"
+                      >
+                        <DollarSign size={16} />
+                        Add Funds
+                      </Button>
                     </CardBody>
                   </Card>
                 );
@@ -298,6 +337,43 @@ export default function Goals() {
             }
             required
           />
+        </form>
+      </Modal>
+
+      {/* Add Funds Modal */}
+      <Modal
+        isOpen={isFundsModalOpen}
+        onClose={() => setIsFundsModalOpen(false)}
+        title="Add Funds to Goal"
+        size="sm"
+        footer={
+          <>
+            <Button
+              variant="outline"
+              onClick={() => setIsFundsModalOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button onClick={handleAddFunds} disabled={!fundsAmount || parseFloat(fundsAmount) <= 0}>
+              Add Funds
+            </Button>
+          </>
+        }
+      >
+        <form className="space-y-4" onSubmit={handleAddFunds}>
+          <FormInput
+            label="Amount to Add"
+            type="number"
+            step="0.01"
+            min="0.01"
+            placeholder="0.00"
+            value={fundsAmount}
+            onChange={(e) => setFundsAmount(e.target.value)}
+            required
+          />
+          <p className="text-sm text-muted-foreground">
+            This amount will be added to your goal's current progress.
+          </p>
         </form>
       </Modal>
     </>
