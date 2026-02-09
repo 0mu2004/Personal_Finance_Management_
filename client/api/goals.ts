@@ -26,5 +26,8 @@ export const goalsAPI = {
   updateGoal: (id: string, data: Partial<CreateGoalRequest>) =>
     axiosClient.put<Goal>(`/goals/${id}`, data),
 
+  addFunds: (id: string, amount: number) =>
+    axiosClient.put<Goal>(`/goals/${id}/add-funds`, { amount }),
+
   deleteGoal: (id: string) => axiosClient.delete(`/goals/${id}`),
 };
