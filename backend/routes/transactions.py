@@ -1,12 +1,19 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, File, UploadFile
 from bson import ObjectId
 from datetime import datetime
 from typing import List, Optional
+import os
+import shutil
+from pathlib import Path
 from database import get_db
 from schemas import CreateTransactionRequest, TransactionResponse
 from dependencies import get_current_user
 
 router = APIRouter(prefix="/transactions", tags=["transactions"])
+
+# Create uploads directory if it doesn't exist
+UPLOAD_DIR = Path("uploads")
+UPLOAD_DIR.mkdir(exist_ok=True)
 
 
 @router.get("", response_model=List[TransactionResponse])
@@ -35,6 +42,7 @@ async def get_transactions(
             category=t["category"],
             description=t.get("description"),
             date=t["date"],
+            document_url=t.get("document_url"),
             created_at=t["created_at"],
         )
         for t in transactions
@@ -56,6 +64,7 @@ async def create_transaction(
         "category": request.category,
         "description": request.description,
         "date": request.date,
+        "document_url": request.document_url,
         "created_at": datetime.utcnow(),
     }
 
@@ -69,6 +78,7 @@ async def create_transaction(
         category=transaction_data["category"],
         description=transaction_data["description"],
         date=transaction_data["date"],
+        document_url=transaction_data.get("document_url"),
         created_at=transaction_data["created_at"],
     )
 
@@ -101,6 +111,7 @@ async def update_transaction(
         "category": request.category,
         "description": request.description,
         "date": request.date,
+        "document_url": request.document_url,
     }
 
     await db.transactions.update_one(
@@ -120,6 +131,7 @@ async def update_transaction(
         category=updated_transaction["category"],
         description=updated_transaction.get("description"),
         date=updated_transaction["date"],
+        document_url=updated_transaction.get("document_url"),
         created_at=updated_transaction["created_at"],
     )
 
@@ -146,3 +158,72 @@ async def delete_transaction(
         )
 
     return {"message": "Transaction deleted successfully"}
+
+
+@router.post("/{transaction_id}/upload-document")
+async def upload_document(
+    transaction_id: str,
+    file: UploadFile = File(...),
+    current_user: dict = Depends(get_current_user),
+):
+    """Upload a document/bill image for a transaction."""
+    db = get_db()
+
+    # Verify transaction exists and belongs to current user
+    transaction = await db.transactions.find_one(
+        {
+            "_id": ObjectId(transaction_id),
+            "user_id": current_user["sub"],
+        }
+    )
+
+    if not transaction:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Transaction not found",
+        )
+
+    # Validate file type
+    allowed_extensions = {".pdf", ".jpg", ".jpeg", ".png", ".gif", ".webp"}
+    file_ext = Path(file.filename).suffix.lower()
+
+    if file_ext not in allowed_extensions:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"File type {file_ext} not allowed. Allowed: {', '.join(allowed_extensions)}",
+        )
+
+    # Validate file size (max 10MB)
+    max_size = 10 * 1024 * 1024
+    file_content = await file.read()
+    if len(file_content) > max_size:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail="File size exceeds 10MB limit",
+        )
+
+    # Save file with unique name
+    user_dir = UPLOAD_DIR / current_user["sub"]
+    user_dir.mkdir(exist_ok=True)
+
+    # Generate unique filename
+    timestamp = datetime.utcnow().timestamp()
+    file_name = f"{transaction_id}_{timestamp}{file_ext}"
+    file_path = user_dir / file_name
+
+    # Save file
+    with open(file_path, "wb") as f:
+        f.write(file_content)
+
+    # Update transaction with document URL
+    document_url = f"/uploads/{current_user['sub']}/{file_name}"
+    await db.transactions.update_one(
+        {"_id": ObjectId(transaction_id)},
+        {"$set": {"document_url": document_url}},
+    )
+
+    return {
+        "message": "Document uploaded successfully",
+        "document_url": document_url,
+        "filename": file.filename,
+    }

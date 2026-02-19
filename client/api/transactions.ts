@@ -8,6 +8,7 @@ export interface Transaction {
   category: string;
   description: string;
   date: string;
+  document_url?: string;
   created_at: string;
 }
 
@@ -17,6 +18,7 @@ export interface CreateTransactionRequest {
   category: string;
   description: string;
   date: string;
+  document_url?: string;
 }
 
 export const transactionsAPI = {
@@ -30,4 +32,14 @@ export const transactionsAPI = {
     axiosClient.put<Transaction>(`/transactions/${id}`, data),
 
   deleteTransaction: (id: string) => axiosClient.delete(`/transactions/${id}`),
+
+  uploadDocument: (id: string, file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return axiosClient.post<{ message: string; document_url: string }>(
+      `/transactions/${id}/upload-document`,
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+  },
 };

@@ -35,6 +35,7 @@ class CreateTransactionRequest(BaseModel):
     category: str
     description: Optional[str] = None
     date: str
+    document_url: Optional[str] = None
 
 
 class TransactionResponse(BaseModel):
@@ -45,6 +46,7 @@ class TransactionResponse(BaseModel):
     category: str
     description: Optional[str]
     date: str
+    document_url: Optional[str] = None
     created_at: datetime
 
     class Config:

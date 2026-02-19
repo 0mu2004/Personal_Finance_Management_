@@ -20,11 +20,15 @@ class MockAxios {
     data?: any,
     config?: any,
   ): Promise<MockResponse<T>> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const result = this.mockPost(url, data);
-        resolve({ data: result as T });
-      }, 100);
+    return new Promise(async (resolve, reject) => {
+      try {
+        const result = await this.mockPost(url, data, config);
+        setTimeout(() => {
+          resolve({ data: result as T });
+        }, 100);
+      } catch (error) {
+        reject(error);
+      }
     });
   }
 
@@ -70,7 +74,12 @@ class MockAxios {
     return null;
   }
 
-  private mockPost(url: string, data: any): any {
+  private async mockPost(url: string, data: any, config?: any): Promise<any> {
+    // Handle file uploads
+    if (url.includes("/upload-document")) {
+      return await this.handleFileUpload(url, data);
+    }
+
     if (url === "/auth/register") {
       const users = JSON.parse(localStorage.getItem("users") || "[]");
       const existingUser = users.find((u: any) => u.email === data.email);
@@ -144,6 +153,53 @@ class MockAxios {
     }
 
     return null;
+  }
+
+  private async handleFileUpload(url: string, data: FormData): Promise<any> {
+    const transactionId = url.split("/")[2]; // Extract ID from /transactions/{id}/upload-document
+    const file = data.get("file") as File;
+
+    if (!file) {
+      throw new Error("No file provided");
+    }
+
+    // Validate file size (10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      throw new Error("File size exceeds 10MB limit");
+    }
+
+    // Read file as data URL
+    return new Promise<any>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const documentUrl = reader.result as string;
+
+        // Update transaction with document URL
+        const transactions = JSON.parse(
+          localStorage.getItem("transactions") || "[]",
+        );
+        const transactionIndex = transactions.findIndex(
+          (t: any) => t.id === transactionId,
+        );
+
+        if (transactionIndex !== -1) {
+          transactions[transactionIndex].document_url = documentUrl;
+          localStorage.setItem("transactions", JSON.stringify(transactions));
+
+          resolve({
+            message: "Document uploaded successfully",
+            document_url: documentUrl,
+            filename: file.name,
+          });
+        } else {
+          reject(new Error("Transaction not found"));
+        }
+      };
+      reader.onerror = () => {
+        reject(new Error("Error reading file"));
+      };
+      reader.readAsDataURL(file);
+    });
   }
 
   private mockPut(url: string, data: any): any {
