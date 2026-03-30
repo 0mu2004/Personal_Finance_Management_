@@ -136,7 +136,7 @@ export default function BudgetPage() {
                           <span
                             className={`text-sm font-medium ${isExceeded ? "text-destructive" : "text-foreground"}`}
                           >
-                            ${budget.spent.toFixed(2)} / $
+                            ₹{budget.spent.toFixed(2)} / ₹
                             {budget.limit.toFixed(2)}
                           </span>
                         </div>
@@ -151,7 +151,7 @@ export default function BudgetPage() {
                       {isExceeded && (
                         <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
                           <p className="text-sm text-destructive font-medium">
-                            ⚠️ Budget exceeded by $
+                            ⚠️ Budget exceeded by ₹
                             {(budget.spent - budget.limit).toFixed(2)}
                           </p>
                         </div>
@@ -165,7 +165,7 @@ export default function BudgetPage() {
                           <p
                             className={`text-lg font-bold ${budget.spent > budget.limit ? "text-destructive" : "text-success"}`}
                           >
-                            $
+                            ₹
                             {Math.max(0, budget.limit - budget.spent).toFixed(
                               2,
                             )}

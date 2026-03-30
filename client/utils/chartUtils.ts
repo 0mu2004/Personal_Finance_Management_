@@ -12,7 +12,7 @@ export const CHART_COLORS = [
 ];
 
 export const formatCurrency = (value: number): string => {
-  return `$${value.toFixed(2)}`;
+  return `₹${value.toFixed(2)}`;
 };
 
 export const formatPercentage = (value: number, decimals = 1): string => {

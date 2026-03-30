@@ -195,7 +195,7 @@ export default function Goals() {
                             Progress
                           </span>
                           <span className="text-sm font-medium text-foreground">
-                            ${goal.current_amount.toFixed(2)} / $
+                            ₹{goal.current_amount.toFixed(2)} / ₹
                             {goal.target_amount.toFixed(2)}
                           </span>
                         </div>
@@ -236,7 +236,7 @@ export default function Goals() {
                             Remaining
                           </p>
                           <p className="text-lg font-bold text-primary">
-                            $
+                            ₹
                             {Math.max(
                               0,
                               goal.target_amount - goal.current_amount,

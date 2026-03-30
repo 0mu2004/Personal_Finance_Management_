@@ -302,7 +302,7 @@ export default function Transactions() {
                                 : "text-foreground"
                             }`}
                           >
-                            {transaction.type === "income" ? "+" : "-"}$
+                            {transaction.type === "income" ? "+" : "-"}₹
                             {transaction.amount.toFixed(2)}
                           </td>
                           <td className="py-4 px-4 text-center">
@@ -486,16 +486,6 @@ export default function Transactions() {
             )}
 
             {!selectedFile && !filePreview && (
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/jpeg,image/png,image/gif,image/webp,application/pdf"
-                onChange={handleFileSelect}
-                className="hidden"
-              />
-            )}
-
-            {!selectedFile && !filePreview && (
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
@@ -540,7 +530,7 @@ export default function Transactions() {
                 {ocrResult.amount && (
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-muted-foreground">Amount:</span>
-                    <span className="font-semibold text-foreground">${ocrResult.amount.toFixed(2)}</span>
+                    <span className="font-semibold text-foreground">₹{ocrResult.amount.toFixed(2)}</span>
                   </div>
                 )}
                 {ocrResult.description && (
