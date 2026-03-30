@@ -8,6 +8,7 @@ from pathlib import Path
 from database import get_db
 from schemas import CreateTransactionRequest, TransactionResponse
 from dependencies import get_current_user
+from ocr import BillAnalyzer
 
 router = APIRouter(prefix="/transactions", tags=["transactions"])
 
@@ -227,3 +228,45 @@ async def upload_document(
         "document_url": document_url,
         "filename": file.filename,
     }
+
+
+@router.post("/analyze-bill")
+async def analyze_bill(
+    file: UploadFile = File(...),
+    current_user: dict = Depends(get_current_user),
+):
+    """Analyze a bill/receipt image or PDF to extract transaction data using OCR."""
+
+    # Validate file type
+    allowed_extensions = {".pdf", ".jpg", ".jpeg", ".png", ".gif", ".webp"}
+    file_ext = Path(file.filename).suffix.lower()
+
+    if file_ext not in allowed_extensions:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"File type {file_ext} not allowed. Allowed: {', '.join(allowed_extensions)}",
+        )
+
+    # Validate file size (max 10MB)
+    max_size = 10 * 1024 * 1024
+    file_content = await file.read()
+    if len(file_content) > max_size:
+        raise HTTPException(
+            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+            detail="File size exceeds 10MB limit",
+        )
+
+    # Analyze bill using OCR
+    try:
+        analysis_result = await BillAnalyzer.analyze_bill(file_content, file.filename)
+
+        return {
+            "success": True,
+            "data": analysis_result,
+            "message": "Bill analysis completed successfully"
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error analyzing bill: {str(e)}",
+        )

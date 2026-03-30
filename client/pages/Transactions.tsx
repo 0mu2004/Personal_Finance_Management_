@@ -1,12 +1,12 @@
 import { useState, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { transactionsAPI, Transaction } from "@/api/transactions";
+import { transactionsAPI, Transaction, OCRResult } from "@/api/transactions";
 import { Navbar } from "@/components/Navbar";
 import { Card, CardHeader, CardBody } from "@/components/Card";
 import { Button } from "@/components/Button";
 import { Modal } from "@/components/Modal";
 import { FormInput, FormSelect } from "@/components/FormInput";
-import { Plus, Trash2, Edit2, Upload, X } from "lucide-react";
+import { Plus, Trash2, Edit2, Upload, X, CheckCircle, AlertCircle } from "lucide-react";
 
 const CATEGORIES = [
   { value: "food", label: "Food & Dining" },
@@ -24,6 +24,7 @@ export default function Transactions() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     type: "expense" as "income" | "expense",
@@ -35,6 +36,8 @@ export default function Transactions() {
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
+  const [ocrResult, setOcrResult] = useState<OCRResult | null>(null);
+  const [showOcrResults, setShowOcrResults] = useState(false);
 
   const {
     data: transactions = [],
@@ -73,7 +76,7 @@ export default function Transactions() {
     setIsModalOpen(true);
   };
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       // Validate file type
@@ -90,6 +93,8 @@ export default function Transactions() {
       }
 
       setSelectedFile(file);
+      setShowOcrResults(false);
+      setOcrResult(null);
 
       // Create preview
       if (file.type.startsWith("image/")) {
@@ -101,12 +106,49 @@ export default function Transactions() {
       } else {
         setFilePreview(file.name); // Show filename for PDFs
       }
+
+      // Trigger OCR analysis
+      await analyzeDocument(file);
     }
+  };
+
+  const analyzeDocument = async (file: File) => {
+    try {
+      setAnalyzing(true);
+      const response = await transactionsAPI.analyzeBill(file);
+
+      if (response.data.success && response.data.data) {
+        setOcrResult(response.data.data);
+        setShowOcrResults(true);
+      }
+    } catch (error) {
+      console.error("Error analyzing bill:", error);
+      setOcrResult(null);
+      setShowOcrResults(false);
+    } finally {
+      setAnalyzing(false);
+    }
+  };
+
+  const applyOcrResults = () => {
+    if (!ocrResult) return;
+
+    setFormData((prev) => ({
+      ...prev,
+      amount: ocrResult.amount ? ocrResult.amount.toString() : prev.amount,
+      category: ocrResult.category || prev.category,
+      description: ocrResult.description || prev.description,
+      date: ocrResult.date || prev.date,
+    }));
+
+    setShowOcrResults(false);
   };
 
   const handleRemoveFile = () => {
     setSelectedFile(null);
     setFilePreview(null);
+    setOcrResult(null);
+    setShowOcrResults(false);
     formData.document_url = undefined;
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
@@ -444,6 +486,16 @@ export default function Transactions() {
             )}
 
             {!selectedFile && !filePreview && (
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/gif,image/webp,application/pdf"
+                onChange={handleFileSelect}
+                className="hidden"
+              />
+            )}
+
+            {!selectedFile && !filePreview && (
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
@@ -453,7 +505,76 @@ export default function Transactions() {
                 <span>Click to upload or drag and drop</span>
               </button>
             )}
+
+            {analyzing && (
+              <div className="mt-3 p-3 bg-blue-50 rounded-lg flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+                <span className="text-sm text-blue-700">Analyzing bill with OCR...</span>
+              </div>
+            )}
           </div>
+
+          {/* OCR Results Section */}
+          {showOcrResults && ocrResult && !analyzing && (
+            <div className="border-t pt-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                  {ocrResult.confidence >= 70 ? (
+                    <>
+                      <CheckCircle size={16} className="text-success" />
+                      Bill Analysis Results
+                    </>
+                  ) : (
+                    <>
+                      <AlertCircle size={16} className="text-amber-500" />
+                      Bill Analysis Results (Low Confidence)
+                    </>
+                  )}
+                </h3>
+                <span className="text-xs font-medium px-2 py-1 bg-blue-100 text-blue-700 rounded">
+                  {ocrResult.confidence}% confidence
+                </span>
+              </div>
+
+              <div className="space-y-2 mb-3 p-3 bg-blue-50 rounded-lg">
+                {ocrResult.amount && (
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-muted-foreground">Amount:</span>
+                    <span className="font-semibold text-foreground">${ocrResult.amount.toFixed(2)}</span>
+                  </div>
+                )}
+                {ocrResult.description && (
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-muted-foreground">Vendor:</span>
+                    <span className="font-semibold text-foreground">{ocrResult.description}</span>
+                  </div>
+                )}
+                {ocrResult.date && (
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-muted-foreground">Date:</span>
+                    <span className="font-semibold text-foreground">
+                      {new Date(ocrResult.date).toLocaleDateString()}
+                    </span>
+                  </div>
+                )}
+                {ocrResult.category && (
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-muted-foreground">Category:</span>
+                    <span className="font-semibold text-foreground capitalize">{ocrResult.category}</span>
+                  </div>
+                )}
+              </div>
+
+              <Button
+                onClick={applyOcrResults}
+                className="w-full"
+                variant="outline"
+              >
+                <CheckCircle size={16} />
+                Apply These Values
+              </Button>
+            </div>
+          )}
         </form>
       </Modal>
     </>

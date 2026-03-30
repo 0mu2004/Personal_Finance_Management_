@@ -75,6 +75,11 @@ class MockAxios {
   }
 
   private async mockPost(url: string, data: any, config?: any): Promise<any> {
+    // Handle OCR analysis
+    if (url.includes("/analyze-bill")) {
+      return await this.analyzeBillMock(data);
+    }
+
     // Handle file uploads
     if (url.includes("/upload-document")) {
       return await this.handleFileUpload(url, data);
@@ -153,6 +158,97 @@ class MockAxios {
     }
 
     return null;
+  }
+
+  private async analyzeBillMock(data: FormData): Promise<any> {
+    const file = data.get("file") as File;
+
+    if (!file) {
+      throw new Error("No file provided");
+    }
+
+    // Simulate OCR analysis
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const filename = file.name.toLowerCase();
+        const fileSize = file.size;
+
+        // Extract hints from filename
+        let category = "other";
+        let description = "Bill";
+        let amount = 50.0 + Math.random() * 100; // Random amount between 50-150
+
+        // Category detection from filename
+        if (
+          filename.includes("restaurant") ||
+          filename.includes("cafe") ||
+          filename.includes("pizza") ||
+          filename.includes("food")
+        ) {
+          category = "food";
+          description = "Restaurant Bill";
+          amount = 25 + Math.random() * 75;
+        } else if (
+          filename.includes("gas") ||
+          filename.includes("fuel") ||
+          filename.includes("uber") ||
+          filename.includes("taxi")
+        ) {
+          category = "transport";
+          description = "Transport";
+          amount = 20 + Math.random() * 60;
+        } else if (
+          filename.includes("electricity") ||
+          filename.includes("water") ||
+          filename.includes("utility")
+        ) {
+          category = "utilities";
+          description = "Utility Bill";
+          amount = 50 + Math.random() * 150;
+        } else if (
+          filename.includes("movie") ||
+          filename.includes("cinema") ||
+          filename.includes("ticket")
+        ) {
+          category = "entertainment";
+          description = "Entertainment";
+          amount = 15 + Math.random() * 30;
+        } else if (
+          filename.includes("shop") ||
+          filename.includes("store") ||
+          filename.includes("mall")
+        ) {
+          category = "shopping";
+          description = "Shopping";
+          amount = 40 + Math.random() * 120;
+        }
+
+        // Generate confidence based on file type and size
+        let confidence = 60;
+        if (file.type.startsWith("image/")) {
+          confidence += 15; // Images are clearer
+        }
+        if (filename.length > 20) {
+          confidence += 10; // Longer filenames suggest more specific items
+        }
+        if (fileSize > 100000) {
+          confidence += 10; // Larger files might have more text
+        }
+
+        resolve({
+          success: true,
+          data: {
+            amount: Math.round(amount * 100) / 100,
+            description: description,
+            date: new Date().toISOString().split("T")[0],
+            category: category,
+            confidence: Math.min(confidence, 100),
+            raw_text: `Mock OCR - Analyzed from ${file.name}`,
+          },
+          message: "Bill analysis completed successfully",
+        });
+      }, 1500); // Simulate OCR processing time
+    });
   }
 
   private async handleFileUpload(url: string, data: FormData): Promise<any> {
